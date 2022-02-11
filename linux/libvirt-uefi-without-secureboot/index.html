@@ -1,0 +1,1443 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>RHEL Booting a virtual machine with UEFI but without secure boot - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rhel-booting-a-virtual-machine-with-uefi-but-without-secure-boot" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RHEL Booting a virtual machine with UEFI but without secure boot
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/analyzing-cni/" class="md-nav__link">
+        Analyzing CNI calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          RHEL Booting a virtual machine with UEFI but without secure boot
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about-secure-boot-with-libvirt-on-rhel-type-distributions" class="md-nav__link">
+    About Secure Boot with libvirt on RHEL type distributions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-virtual-machine-with-uefi" class="md-nav__link">
+    Creating a virtual machine with UEFI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-uefi-and-secure-boot-in-action" class="md-nav__link">
+    Testing UEFI and Secure Boot in action
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disabling-secure-boot" class="md-nav__link">
+    Disabling Secure Boot
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-custom-uefi-firmware-from-upstream" class="md-nav__link">
+    Using custom UEFI firmware from upstream
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    Sources
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/arp_and_the_neighbor_table/" class="md-nav__link">
+        ARP and the Neighbor table
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bpf-and-tcpdump/" class="md-nav__link">
+        BPF and tcpdump
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/netlink/" class="md-nav__link">
+        Netlink
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_mirror_registry/" class="md-nav__link">
+        Installing a cluster with a mirror registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="rhel-booting-a-virtual-machine-with-uefi-but-without-secure-boot">RHEL: Booting a virtual machine with UEFI but without secure boot</h1>
+<h2 id="about-secure-boot-with-libvirt-on-rhel-type-distributions">About Secure Boot with libvirt on RHEL type distributions</h2>
+<p>The default RHEL/CentOS/Fedora RPMs provide a UEFI firmware file named <code>/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd</code>. The actual firmware can be configured to enforce Secure Boot or to ignore it. More on this later.</p>
+<p>The firmware is bundled in RPM <code>edk2-ovmf-...</code>:</p>
+<pre><code># rpm -qa | grep ovmf
+edk2-ovmf-20200602gitca407c7246bf-4.el8.noarch
+# rpm -ql edk2-ovmf-20200602gitca407c7246bf-4.el8.noarch
+/usr/share/OVMF
+/usr/share/OVMF/OVMF_CODE.secboot.fd
+/usr/share/OVMF/OVMF_VARS.fd
+/usr/share/OVMF/OVMF_VARS.secboot.fd
+/usr/share/OVMF/UefiShell.iso
+/usr/share/doc/edk2-ovmf
+/usr/share/doc/edk2-ovmf/README
+/usr/share/doc/edk2-ovmf/ovmf-whitepaper-c770f8c.txt
+/usr/share/edk2
+/usr/share/edk2/ovmf
+/usr/share/edk2/ovmf/EnrollDefaultKeys.efi
+/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd
+/usr/share/edk2/ovmf/OVMF_VARS.fd
+/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd
+/usr/share/edk2/ovmf/Shell.efi
+/usr/share/edk2/ovmf/UefiShell.iso
+/usr/share/licenses/edk2-ovmf
+/usr/share/licenses/edk2-ovmf/LICENSE.openssl
+/usr/share/licenses/edk2-ovmf/License-History.txt
+/usr/share/licenses/edk2-ovmf/License.OvmfPkg.txt
+/usr/share/licenses/edk2-ovmf/License.txt
+/usr/share/qemu
+/usr/share/qemu/firmware
+/usr/share/qemu/firmware/40-edk2-ovmf-sb.json
+/usr/share/qemu/firmware/50-edk2-ovmf.json
+</code></pre>
+<p>When creating a domain with <code>virt-install</code>, the configuration will default do secure boot enabled:</p>
+<pre><code>virt-install --name f34-uefi --network network=management    --ram 2048 --disk size=20    --boot uefi    --location https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Server/x86_64/os/ --dry-run --print-xml
+</code></pre>
+<p>The XML will contain the following:</p>
+<pre><code>  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-rhel8.2.0'&gt;hvm&lt;/type&gt;
+    &lt;loader readonly='yes' secure='yes' type='pflash'&gt;/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd&lt;/loader&gt;
+    &lt;nvram&gt;/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd&lt;/nvram&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+</code></pre>
+<p>According to <a href="https://libvirt.org/formatdomain.html#elementsOSBIOS">https://libvirt.org/formatdomain.html#elementsOSBIOS</a>, Secure Boot cannot be disabled simply by setting <code>secure='no'</code>.</p>
+<h2 id="creating-a-virtual-machine-with-uefi">Creating a virtual machine with UEFI</h2>
+<p>For all of the following tests, we will need a virtual machine with UEFI enabled.</p>
+<p>Use virt-install to generate the XML for your virtual machine, e.g.:</p>
+<pre><code>virt-install --name f34-uefi --network network=management    --ram 2048 --disk size=20    --boot uefi    --location https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Server/x86_64/os/ --dry-run --print-xml &gt; vm.xml
+</code></pre>
+<p>You will have to add disks and NICs to that VM and then you can create the actual domain. Or, you define it first and then use virt-manager to conveniently add the relevant components. The above is just a rudimentary example.</p>
+<p>The XML will contain the following configuration which will enable UEFI with secboot by default:</p>
+<pre><code>  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-rhel8.2.0'&gt;hvm&lt;/type&gt;
+    &lt;loader readonly='yes' secure='yes' type='pflash'&gt;/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd&lt;/loader&gt;
+    &lt;nvram&gt;/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd&lt;/nvram&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+</code></pre>
+<p>Define the VM with <code>virsh define ...</code> once the XML looks good to you.</p>
+<h2 id="testing-uefi-and-secure-boot-in-action">Testing UEFI and Secure Boot in action</h2>
+<p>Download Alpine Linux from <a href="https://alpinelinux.org/downloads/">https://alpinelinux.org/downloads/</a></p>
+<pre><code>curl -O https://dl-cdn.alpinelinux.org/alpine/v3.14/releases/x86_64/alpine-extended-3.14.0-x86_64.iso
+</code></pre>
+<p>Now, start the VM with the Alpine ISO as the first entry in the boot order:</p>
+<pre><code>  &lt;devices&gt;
+(...)
+    &lt;disk type='file' device='cdrom'&gt;
+      &lt;driver name='qemu' type='raw'/&gt;
+      &lt;source file='/var/lib/libvirt/images/alpine-extended-3.14.0-x86_64.iso'/&gt;
+      &lt;target dev='sda' bus='sata'/&gt;
+      &lt;readonly/&gt;
+      &lt;boot order='1'/&gt;
+      &lt;address type='drive' controller='0' bus='0' target='0' unit='0'/&gt;
+    &lt;/disk&gt;
+(...)
+  &lt;/devices&gt;
+</code></pre>
+<p>When the VM starts and tries to boot from the ISO, you will see:</p>
+<pre><code># virsh start vm1 ; virsh console vm1
+Domain vm1 started
+
+Connected to domain openshift-master-1-uefi
+Escape character is ^]
+
+BdsDxe: loading Boot0001 &quot;UEFI QEMU DVD-ROM QM00001 &quot; from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0)
+BdsDxe: failed to load Boot0001 &quot;UEFI QEMU DVD-ROM QM00001 &quot; from PciRoot(0x0)/Pci(0x1F,0x2)/Sata(0x0,0xFFFF,0x0): Access Denied
+</code></pre>
+<h2 id="disabling-secure-boot">Disabling Secure Boot</h2>
+<p>Keep everything as is, but make sure to overwrite the VM's nvram which is in <code>/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd</code> with the non Secure Boot variables to disable the feature. As a reminder, from the VM's XML:</p>
+<pre><code>  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-rhel8.2.0'&gt;hvm&lt;/type&gt;
+    &lt;loader readonly='yes' secure='no' type='pflash'&gt;/usr/share/edk2.git/ovmf-x64/OVMF_CODE-pure-efi.fd&lt;/loader&gt;
+    &lt;nvram&gt;/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd&lt;/nvram&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+</code></pre>
+<p>Use the non Secure Boot nvram:</p>
+<pre><code>\cp /usr/share/edk2/ovmf/OVMF_VARS.fd /var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd
+</code></pre>
+<p>The VM will now boot without issues.</p>
+<h2 id="using-custom-uefi-firmware-from-upstream">Using custom UEFI firmware from upstream</h2>
+<p>If you are feeling adventurous, you can download upstream UEFI firmware from the OVMF project without secure boot:</p>
+<pre><code>cd /etc/yum.repos.d/
+curl -O https://www.kraxel.org/repos/firmware.repo
+yum install edk2.git-ovmf-x64 -y
+</code></pre>
+<p>The default XML will contain the following:</p>
+<pre><code>  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-rhel8.2.0'&gt;hvm&lt;/type&gt;
+    &lt;loader readonly='yes' secure='yes' type='pflash'&gt;/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd&lt;/loader&gt;
+    &lt;nvram&gt;/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd&lt;/nvram&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+</code></pre>
+<p>Change that to refer to the upstream firmware:</p>
+<pre><code>  &lt;os&gt;
+    &lt;type arch='x86_64' machine='pc-q35-rhel8.2.0'&gt;hvm&lt;/type&gt;
+    &lt;loader readonly='yes' secure='no' type='pflash'&gt;/usr/share/edk2.git/ovmf-x64/OVMF_CODE-pure-efi.fd&lt;/loader&gt;
+    &lt;nvram&gt;/var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd&lt;/nvram&gt;
+    &lt;bootmenu enable='yes'/&gt;
+  &lt;/os&gt;
+</code></pre>
+<p>And make sure to copy the matching <code>*_VARS.fd</code> file:</p>
+<pre><code>cp /usr/share/edk2.git/ovmf-x64/OVMF_VARS-pure-efi.fd /var/lib/libvirt/qemu/nvram/f34-uefi_VARS.fd
+</code></pre>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://github.com/tianocore/tianocore.github.io/wiki/OVMF">https://github.com/tianocore/tianocore.github.io/wiki/OVMF</a></li>
+<li><a href="https://www.kraxel.org/repos/">https://www.kraxel.org/repos/</a></li>
+<li><a href="https://fedoraproject.org/wiki/Using_UEFI_with_QEMU#Install_a_Fedora_VM_with_UEFI">https://fedoraproject.org/wiki/Using_UEFI_with_QEMU#Install_a_Fedora_VM_with_UEFI</a></li>
+<li><a href="https://that.guru/blog/uefi-secure-boot-in-libvirt/">https://that.guru/blog/uefi-secure-boot-in-libvirt/</a></li>
+<li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1906500#c23">https://bugzilla.redhat.com/show_bug.cgi?id=1906500#c23</a></li>
+<li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1929357">https://bugzilla.redhat.com/show_bug.cgi?id=1929357</a></li>
+</ul>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 25, 2021</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../get-process-cgroup-info-and-limits/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Retrieving process cgroup resource usage and limit info
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../setting-journalctl-limits/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Setting journalctl limits
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

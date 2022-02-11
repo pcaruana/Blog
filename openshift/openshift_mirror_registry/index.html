@@ -1,0 +1,1573 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>Installing a cluster with a mirror registry - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#openshift-mirror-registry-setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Installing a cluster with a mirror registry
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analyzing-cni/" class="md-nav__link">
+        Analyzing CNI calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/libvirt-uefi-without-secureboot/" class="md-nav__link">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/arp_and_the_neighbor_table/" class="md-nav__link">
+        ARP and the Neighbor table
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bpf-and-tcpdump/" class="md-nav__link">
+        BPF and tcpdump
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/netlink/" class="md-nav__link">
+        Netlink
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Installing a cluster with a mirror registry
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Installing a cluster with a mirror registry
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-a-private-registry-server" class="md-nav__link">
+    Setting up a private registry server
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mirroring-openshift-container-images-into-private-registry-and-preparing-openshift-install" class="md-nav__link">
+    Mirroring OpenShift container images into private registry and preparing openshift-install
+  </a>
+  
+    <nav class="md-nav" aria-label="Mirroring OpenShift container images into private registry and preparing openshift-install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#merging-the-pull-secrets" class="md-nav__link">
+    Merging the pull secrets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mirroring-the-container-images" class="md-nav__link">
+    Mirroring the container images
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-a-disconnected-cluster" class="md-nav__link">
+    Installing a disconnected cluster
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="openshift-mirror-registry-setup">OpenShift mirror registry setup</h1>
+<p>In the following, we will run a container registry without hostname (only IP address) and self-signed CA and certificate. We need a virtual machine that serves as the container registry and a host that serves as the OpenShift install server. These can both be on the same machine, to simplify things further.</p>
+<p>All steps below clarify and should give an easy walkthrough of the OpenShift restricted network installation guide. </p>
+<p>Follow the OpenShift documentation. The documentation isn't very detailed (at least at the moment), so I'm going through the documentation with an example deployment.</p>
+<ul>
+<li><a href="https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html">https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html</a></li>
+</ul>
+<h2 id="setting-up-a-private-registry-server">Setting up a private registry server</h2>
+<p>Follow <a href="https://pablocaruana.github.io/blog/openshift/private-registry/">https://pablocaruana.github.io/blog/openshift/private-registry/</a></p>
+<h2 id="mirroring-openshift-container-images-into-private-registry-and-preparing-openshift-install">Mirroring OpenShift container images into private registry and preparing openshift-install</h2>
+<p>Connect to the installation server and follow steps from the installation guide:
+<a href="https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html">https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html</a></p>
+<h3 id="merging-the-pull-secrets">Merging the pull secrets</h3>
+<p>Download your pull-secret from <a href="https://cloud.redhat.com/openshift/install/pull-secret">https://cloud.redhat.com/openshift/install/pull-secret</a>.</p>
+<p>At time of this writing, a bug makes this procedure a bit more clumsy: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1866588">https://bugzilla.redhat.com/show_bug.cgi?id=1866588</a></p>
+<pre><code>$ oc registry login --to ./pull-secret.json --registry &quot;192.0.2.100:5000&quot; --auth-basic=root:password
+error: Missing or incomplete configuration info.  Please point to an existing, complete config file:
+
+
+  1. Via the command-line flag --kubeconfig
+  2. Via the KUBECONFIG environment variable
+  3. In your home directory as ~/.kube/config
+
+To view or setup config directly use the 'config' command.
+</code></pre>
+<p>Instead, either follow:
+<a href="https://docs.openshift.com/container-platform/4.2/installing/install_config/installing-restricted-networks-preparations.html#installation-adding-registry-pull-secret_installing-restricted-networks-preparations">https://docs.openshift.com/container-platform/4.2/installing/install_config/installing-restricted-networks-preparations.html#installation-adding-registry-pull-secret_installing-restricted-networks-preparations</a></p>
+<p>Or, more elegantly, create a pull secret with podman:</p>
+<pre><code>$ podman login -u root -p password --authfile pull-secret-podman.json https://192.0.2.100:5000
+WARNING! Using --password via the cli is insecure. Please consider using --password-stdin
+Login Succeeded!
+$ cat pull-secret-podman.json
+{
+    &quot;auths&quot;: {
+        &quot;192.0.2.100:5000&quot;: {
+            &quot;auth&quot;: &quot;cm9vdDpwYXNzd29yZA==&quot;
+        }
+    }
+</code></pre>
+<p>Install jq</p>
+<pre><code>sudo yum install jq -y
+</code></pre>
+<p>Then, merge both secrets:</p>
+<pre><code>jq -c --argjson var &quot;$(jq .auths pull-secret-podman.json)&quot; '.auths += $var' pull-secret.json &gt; pull-secret-merged.json
+</code></pre>
+<h3 id="mirroring-the-container-images">Mirroring the container images</h3>
+<p>Get <code>$OCP_RELEASE</code> from <a href="https://quay.io/repository/openshift-release-dev/ocp-release?tag=latest&amp;tab=tags">https://quay.io/repository/openshift-release-dev/ocp-release?tag=latest&amp;tab=tags</a> and export required env variables, e.g.:</p>
+<pre><code>[root@mirror ~]#  env | egrep 'OCP|LOCAL|PRODUCT|RELEASE'
+export RELEASE_NAME=ocp-release
+export LOCAL_SECRET_JSON=pull-secret-merged.json
+export OCP_RELEASE=4.5.9
+export PRODUCT_REPO=openshift-release-dev
+export LOCAL_REPOSITORY=ocp4/openshift4
+export LOCAL_REGISTRY=192.0.2.100:5000
+export ARCHITECTURE=x86_64
+export REMOVABLE_MEDIA_PATH=removable_media
+</code></pre>
+<p>If you want to simulate the removable media steps, create a directory to simulate removable media and export the variable:</p>
+<pre><code>export REMOVABLE_MEDIA_PATH=removable_media
+mkdir removable_media
+</code></pre>
+<p>Now, continue with the rest of the instructions from <a href="https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html#installation-mirror-repository_installing-restricted-networks-preparations">https://docs.openshift.com/container-platform/4.5/installing/install_config/installing-restricted-networks-preparations.html#installation-mirror-repository_installing-restricted-networks-preparations</a></p>
+<p>For example:</p>
+<pre><code>$ oc adm -a ${LOCAL_SECRET_JSON} release mirror      --from=quay.io/${PRODUCT_REPO}/${RELEASE_NAME}:${OCP_RELEASE}-${ARCHITECTURE}      --to=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}      --to-release-image=${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}:${OCP_RELEASE}-${ARCHITECTURE}
+</code></pre>
+<p>After mirroring the images, the following instructions will be presented:</p>
+<pre><code>(...)
+Success
+Update image:  192.0.2.100:5000/ocp4/openshift4:4.5.9-x86_64
+Mirror prefix: 192.0.2.100:5000/ocp4/openshift4
+
+To use the new mirrored repository to install, add the following section to the install-config.yaml:
+
+imageContentSources:
+- mirrors:
+  - 192.0.2.100:5000/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - 192.0.2.100:5000/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+
+
+To use the new mirrored repository for upgrades, use the following to create an ImageContentSourcePolicy:
+
+apiVersion: operator.openshift.io/v1alpha1
+kind: ImageContentSourcePolicy
+metadata:
+  name: example
+spec:
+  repositoryDigestMirrors:
+  - mirrors:
+    - 192.0.2.100:5000/ocp4/openshift4
+    source: quay.io/openshift-release-dev/ocp-release
+  - mirrors:
+    - 192.0.2.100:5000/ocp4/openshift4
+    source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+</code></pre>
+<p>Make sure to save these instructions for later.</p>
+<p>Verify contents of the local registry:</p>
+<pre><code>$ curl -u root:password https://192.0.2.100:5000/v2/_catalog | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    37  100    37    0     0   1121      0 --:--:-- --:--:-- --:--:--  1121
+{
+  &quot;repositories&quot;: [
+    &quot;ocp4/openshift4&quot;
+  ]
+}
+$ curl -u root:password https://192.0.2.100:5000/v2/ocp4/openshift4/tags/list | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3241  100  3241    0     0   102k      0 --:--:-- --:--:-- --:--:--  102k
+{
+  &quot;name&quot;: &quot;ocp4/openshift4&quot;,
+  &quot;tags&quot;: [
+    &quot;4.5.9-kube-storage-version-migrator&quot;,
+    &quot;4.5.9-csi-snapshot-controller&quot;,
+    &quot;4.5.9-cluster-kube-apiserver-operator&quot;,
+    &quot;4.5.9-grafana&quot;,
+    &quot;4.5.9-cluster-update-keys&quot;,
+    &quot;4.5.9-hyperkube&quot;,
+    &quot;4.5.9-container-networking-plugins&quot;,
+    &quot;4.5.9-etcd&quot;,
+    &quot;4.5.9-baremetal-operator&quot;,
+    &quot;4.5.9-jenkins-agent-nodejs&quot;,
+    &quot;4.5.9-cluster-monitoring-operator&quot;,
+    &quot;4.5.9-installer&quot;,
+    &quot;4.5.9-aws-machine-controllers&quot;,
+    &quot;4.5.9-kube-etcd-signer-server&quot;,
+    &quot;4.5.9-kuryr-controller&quot;,
+    &quot;4.5.9-oauth-server&quot;,
+    &quot;4.5.9-cluster-authentication-operator&quot;,
+    &quot;4.5.9-operator-lifecycle-manager&quot;,
+    &quot;4.5.9-haproxy-router&quot;,
+    &quot;4.5.9-cluster-node-tuning-operator&quot;,
+    &quot;4.5.9-openshift-state-metrics&quot;,
+    &quot;4.5.9-prom-label-proxy&quot;,
+    &quot;4.5.9-cluster-kube-scheduler-operator&quot;,
+    &quot;4.5.9-machine-os-content&quot;,
+    &quot;4.5.9-cli-artifacts&quot;,
+    &quot;4.5.9-cluster-kube-controller-manager-operator&quot;,
+    &quot;4.5.9-libvirt-machine-controllers&quot;,
+    &quot;4.5.9-console-operator&quot;,
+    &quot;4.5.9-prometheus-operator&quot;,
+    &quot;4.5.9-openshift-apiserver&quot;,
+    &quot;4.5.9-x86_64&quot;,
+    &quot;4.5.9-console&quot;,
+    &quot;4.5.9-operator-marketplace&quot;,
+    &quot;4.5.9-cluster-etcd-operator&quot;,
+    &quot;4.5.9-k8s-prometheus-adapter&quot;,
+    &quot;4.5.9-ironic-inspector&quot;,
+    &quot;4.5.9-kube-rbac-proxy&quot;,
+    &quot;4.5.9-machine-config-operator&quot;,
+    &quot;4.5.9-ovirt-machine-controllers&quot;,
+    &quot;4.5.9-cluster-dns-operator&quot;,
+    &quot;4.5.9-aws-pod-identity-webhook&quot;,
+    &quot;4.5.9-ironic-machine-os-downloader&quot;,
+    &quot;4.5.9-cluster-csi-snapshot-controller-operator&quot;,
+    &quot;4.5.9-cluster-image-registry-operator&quot;,
+    &quot;4.5.9-kube-proxy&quot;,
+    &quot;4.5.9-cluster-autoscaler-operator&quot;,
+    &quot;4.5.9-multus-whereabouts-ipam-cni&quot;,
+    &quot;4.5.9-cluster-bootstrap&quot;,
+    &quot;4.5.9-insights-operator&quot;,
+    &quot;4.5.9-keepalived-ipfailover&quot;,
+    &quot;4.5.9-machine-api-operator&quot;,
+    &quot;4.5.9-azure-machine-controllers&quot;,
+    &quot;4.5.9-cluster-policy-controller&quot;,
+    &quot;4.5.9-cluster-machine-approver&quot;,
+    &quot;4.5.9-deployer&quot;,
+    &quot;4.5.9-installer-artifacts&quot;,
+    &quot;4.5.9-gcp-machine-controllers&quot;,
+    &quot;4.5.9-service-ca-operator&quot;,
+    &quot;4.5.9-prometheus-config-reloader&quot;,
+    &quot;4.5.9-oauth-proxy&quot;,
+    &quot;4.5.9-ovn-kubernetes&quot;,
+    &quot;4.5.9-prometheus&quot;,
+    &quot;4.5.9-sdn&quot;,
+    &quot;4.5.9-ironic-hardware-inventory-recorder&quot;,
+    &quot;4.5.9-baremetal-runtimecfg&quot;,
+    &quot;4.5.9-baremetal-installer&quot;,
+    &quot;4.5.9-ironic-ipa-downloader&quot;,
+    &quot;4.5.9-operator-registry&quot;,
+    &quot;4.5.9-pod&quot;,
+    &quot;4.5.9-multus-cni&quot;,
+    &quot;4.5.9-cloud-credential-operator&quot;,
+    &quot;4.5.9-kuryr-cni&quot;,
+    &quot;4.5.9-cluster-kube-storage-version-migrator-operator&quot;,
+    &quot;4.5.9-docker-builder&quot;,
+    &quot;4.5.9-telemeter&quot;,
+    &quot;4.5.9-tools&quot;,
+    &quot;4.5.9-docker-registry&quot;,
+    &quot;4.5.9-baremetal-machine-controllers&quot;,
+    &quot;4.5.9-tests&quot;,
+    &quot;4.5.9-cluster-svcat-controller-manager-operator&quot;,
+    &quot;4.5.9-cluster-ingress-operator&quot;,
+    &quot;4.5.9-kube-client-agent&quot;,
+    &quot;4.5.9-cli&quot;,
+    &quot;4.5.9-ironic-static-ip-manager&quot;,
+    &quot;4.5.9-jenkins&quot;,
+    &quot;4.5.9-cluster-node-tuned&quot;,
+    &quot;4.5.9-cluster-storage-operator&quot;,
+    &quot;4.5.9-prometheus-node-exporter&quot;,
+    &quot;4.5.9-openstack-machine-controllers&quot;,
+    &quot;4.5.9-cluster-openshift-apiserver-operator&quot;,
+    &quot;4.5.9-ironic&quot;,
+    &quot;4.5.9-cluster-version-operator&quot;,
+    &quot;4.5.9-local-storage-static-provisioner&quot;,
+    &quot;4.5.9-mdns-publisher&quot;,
+    &quot;4.5.9-multus-route-override-cni&quot;,
+    &quot;4.5.9-thanos&quot;,
+    &quot;4.5.9-cluster-config-operator&quot;,
+    &quot;4.5.9-jenkins-agent-maven&quot;,
+    &quot;4.5.9-openshift-controller-manager&quot;,
+    &quot;4.5.9-prometheus-alertmanager&quot;,
+    &quot;4.5.9-cluster-autoscaler&quot;,
+    &quot;4.5.9-configmap-reloader&quot;,
+    &quot;4.5.9-multus-admission-controller&quot;,
+    &quot;4.5.9-kube-state-metrics&quot;,
+    &quot;4.5.9-coredns&quot;,
+    &quot;4.5.9-cluster-openshift-controller-manager-operator&quot;,
+    &quot;4.5.9-cluster-samples-operator&quot;,
+    &quot;4.5.9-cluster-svcat-apiserver-operator&quot;,
+    &quot;4.5.9-must-gather&quot;,
+    &quot;4.5.9-cluster-network-operator&quot;
+  ]
+}
+</code></pre>
+<p>Now, extract the new <code>openshift-install</code> command:</p>
+<pre><code>$ oc adm -a ${LOCAL_SECRET_JSON} release extract --command=openshift-install &quot;${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}:${OCP_RELEASE}-${ARCHITECTURE}
+</code></pre>
+<p>The resulting file can be found in the current working directory:</p>
+<pre><code>$ ls openshift-install
+openshift-install
+</code></pre>
+<h2 id="installing-a-disconnected-cluster">Installing a disconnected cluster</h2>
+<p>Once the new openshift-install client was created, continue with the actual cluster installation.</p>
+<p>For example, on AWS, use <a href="https://docs.openshift.com/container-platform/4.5/installing/installing_aws/installing-restricted-networks-aws.html#installing-restricted-networks-aws">https://docs.openshift.com/container-platform/4.5/installing/installing_aws/installing-restricted-networks-aws.html#installing-restricted-networks-aws</a></p>
+<p>Create and then modify the <code>install-config.yaml</code> file on the installation server. Make sure to add <code>imageContentSources</code> (from the output of the last command) and also add the rootCA to the <code>additionalTrustBundle</code>:</p>
+<pre><code>cat install-config.yaml
+(...)
+imageContentSources:
+- mirrors:
+  - 10.10.181.198:5000/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-release
+- mirrors:
+  - 10.10.181.198:5000/ocp4/openshift4
+  source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIIFxjCCA66gAwIBAgIJAOpJf+VRkKHUMA0GCSqGSIb3DQEBCwUAMIGKMQswCQYD
+  VQQGEwJVUzEXMBUGA1UECAwOTm9ydGggQ2Fyb2xpbmExEDAOBgNVBAcMB1JhbGVp
+  (... contents of CA/rootCA.crt ...)
+  oxmeuWzlWvcOCb4Usxa9m0rO95fa5Af2QoA4qxlvi7JoTypRR/zAskqHmcsaTfJN
+  k4p3g3YK5u5tvbzERBTfl8bfbd/eIwBLNMDwmKk2z42bcP1OAAHHqCfChvc1Zasr
+  TFVS2yQvfvvYSzW6tQE9UphVIiXeQhGhl7+TQ1wgoHRQL3pZRwxX9PrT
+  -----END CERTIFICATE-----
+(...)
+</code></pre>
+<p>Also, make sure to modify the <code>pullSecret</code> section in install-config.yaml to include the credentials for the custom registry:</p>
+<pre><code>pullSecret: '(... contents of pull-secret-merged.json ...)'
+</code></pre>
+<p>Steps for modifying <code>install-config.yaml</code> can be found in <a href="https://docs.openshift.com/container-platform/4.5/installing/installing_aws/installing-restricted-networks-aws.html#installation-generate-aws-user-infra-install-config_installing-restricted-networks-aws">https://docs.openshift.com/container-platform/4.5/installing/installing_aws/installing-restricted-networks-aws.html#installation-generate-aws-user-infra-install-config_installing-restricted-networks-aws</a></p>
+<p>Follow any further steps from the restricted installation documentation. Finally, run the installation. Use the custom <code>openshift-install</code> binary that was generated earlier:</p>
+<pre><code> ./openshift-install create cluster --dir=install-config/ --log-level=debug
+</code></pre>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 27, 2020</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../ingress-controller-sharding-on-separate-vip/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Ingress Controller Sharding on separate VIP
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../istio-1.6-on-ocp.4.x/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Istio 1.6 on OpenShift 4.x
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

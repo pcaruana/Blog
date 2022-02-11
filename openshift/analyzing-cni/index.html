@@ -1,0 +1,1524 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>Analyzing CNI calls - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#analyzing-cni-calls" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Analyzing CNI calls
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Analyzing CNI calls
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Analyzing CNI calls
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    Setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-wrapper-script" class="md-nav__link">
+    Creating a wrapper script
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    Rollback
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triggering-cni-calls" class="md-nav__link">
+    Triggering CNI calls
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examining-cni-calls" class="md-nav__link">
+    Examining CNI calls
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/libvirt-uefi-without-secureboot/" class="md-nav__link">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/arp_and_the_neighbor_table/" class="md-nav__link">
+        ARP and the Neighbor table
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bpf-and-tcpdump/" class="md-nav__link">
+        BPF and tcpdump
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/netlink/" class="md-nav__link">
+        Netlink
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift_mirror_registry/" class="md-nav__link">
+        Installing a cluster with a mirror registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../networking/sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="analyzing-cni-calls">Analyzing CNI calls</h1>
+<p>Let's analyze how CNI actually works. First, you should read through the actual specification: <a href="https://github.com/containernetworking/cni/blob/master/SPEC.md">https://github.com/containernetworking/cni/blob/master/SPEC.md</a></p>
+<p>Once you have done that, the next best thing to writing your own plugin is surely to write a wrapper script around existing plugins and to observe what is being passed to/from the plugins.</p>
+<h3 id="setup">Setup</h3>
+<p>All examples are run on a signle-node Kubernetes cluster with CRI-O. I did not install a CNI plugin, instead I am relying on CRI-O's <code>bridge</code> plugin. The <code>bridge</code> plugin uses the <code>host-local</code> plugin for IPAM. The configuration file can be found under <code>/etc/cni/net.d/100-crio-bridge.conf</code> and its contents look as follows:</p>
+<pre><code>[root@node1 ~]# cat /etc/cni/net.d/100-crio-bridge.conf 
+{
+    &quot;cniVersion&quot;: &quot;0.3.1&quot;,
+    &quot;name&quot;: &quot;crio&quot;,
+    &quot;type&quot;: &quot;bridge&quot;,
+    &quot;bridge&quot;: &quot;cni0&quot;,
+    &quot;isGateway&quot;: true,
+    &quot;ipMasq&quot;: true,
+    &quot;hairpinMode&quot;: true,
+    &quot;ipam&quot;: {
+        &quot;type&quot;: &quot;host-local&quot;,
+        &quot;routes&quot;: [
+            { &quot;dst&quot;: &quot;0.0.0.0/0&quot; },
+            { &quot;dst&quot;: &quot;1100:200::1/24&quot; }
+        ],
+        &quot;ranges&quot;: [
+            [{ &quot;subnet&quot;: &quot;10.85.0.0/16&quot; }],
+            [{ &quot;subnet&quot;: &quot;1100:200::/24&quot; }]
+        ]
+    }
+}
+</code></pre>
+<p>The actual plugin binaries are <code>/opt/bin/cni/bridge</code> and <code>/opt/bin/cni/host-local</code>.</p>
+<h3 id="creating-a-wrapper-script">Creating a wrapper script</h3>
+<p>Create the wrapper script in a temporary location:</p>
+<pre><code>f=$(mktemp)
+cat &lt;&lt;'EOF' &gt; $f
+#!/bin/bash
+
+SCRIPT=$(readlink -f $0)
+LOG_DIR=/tmp/log
+if ! [ -d $LOG_DIR ];then
+  mkdir -p $LOG_DIR
+fi
+
+LOG=${LOG_DIR}/$(basename $0)
+
+date &gt;&gt; $LOG
+echo &quot;=================================================================&quot; &gt;&gt; $LOG
+echo &quot;CNI params:&quot; &gt;&gt; $LOG
+env | grep CNI &gt;&gt; $LOG
+echo &quot;env:&quot; &gt;&gt; $LOG
+env &gt;&gt; $LOG
+if [ ! -t 0 ]; then
+  {
+  echo &quot;INPUT:&quot; &gt;&gt; $LOG
+  output=$(tee -a $LOG | ${SCRIPT}-original &quot;$@&quot; | tee /dev/fd/3)
+  echo &quot;&quot; &gt;&gt; $LOG
+  echo &quot;OUTPUT:&quot; &gt;&gt; $LOG
+  echo &quot;$output&quot; &gt;&gt; $LOG
+  } 3&gt;&amp;1
+else
+  echo &quot;OUTPUT:&quot; &gt;&gt; $LOG
+  ${SCRIPT}-original &quot;$@&quot; | tee -a $LOG
+fi
+
+echo &quot;Returned at: $(date)&quot; &gt;&gt; $LOG
+echo &quot;=================================================================&quot; &gt;&gt; $LOG
+echo &quot;&quot; &gt;&gt; $LOG
+echo &quot;&quot; &gt;&gt; $LOG
+EOF
+chmod +x $f
+</code></pre>
+<p>Then, rename the original plugins to <code>&lt;name&gt;-original</code> and copy the wrapper script into the former location of the binary files:</p>
+<pre><code>for plugin in bridge host-local; do
+  \cp /opt/cni/bin/${plugin} /opt/cni/bin/${plugin}-original
+  \cp $f /opt/cni/bin/${plugin}
+done
+</code></pre>
+<h3 id="rollback">Rollback</h3>
+<p>To revert this back to defaults, after testing, run:</p>
+<pre><code>for plugin in bridge host-local; do
+  \mv /opt/cni/bin/${plugin}-original /opt/cni/bin/${plugin}
+done
+</code></pre>
+<h3 id="triggering-cni-calls">Triggering CNI calls</h3>
+<p>Now, create a test invocation. For example, use <a href="https://github.com/containernetworking/cni/tree/master/cnitool">https://github.com/containernetworking/cni/tree/master/cnitool</a></p>
+<pre><code>git clone  https://github.com/containernetworking/cni
+pushd cni/cnitool
+go build
+mv cnitool /usr/local/bin
+popd
+ip netns add testing
+CNI_PATH=/opt/cni/bin/ cnitool add crio /var/run/netns/testing
+CNI_PATH=/opt/cni/bin/ cnitool del crio /var/run/netns/testing
+</code></pre>
+<p>Alternatively, simply delete a running pod and have it recreated by kubernetes:</p>
+<pre><code>kubectl delete pod -n &lt;...&gt; &lt;...&gt;
+</code></pre>
+<h3 id="examining-cni-calls">Examining CNI calls</h3>
+<p>In file <code>/tmp/log/bridge</code> you can see that the <code>bridge</code> plugin uses data from the <code>host-local</code> to create the final output:</p>
+<pre><code>Fri Aug 27 07:55:52 EDT 2021
+=================================================================
+CNI params:
+CNI_PATH=/opt/cni/bin:/usr/libexec/cni
+CNI_ARGS=IgnoreUnknown=1;K8S_POD_NAMESPACE=kube-system;K8S_POD_NAME=coredns-78fcd69978-n5khq;K8S_POD_INFRA_CONTAINER_ID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8;K8S_POD_UID=94f2364f-4fd6-4b74-9f5a-c68e2c6f97dd
+CNI_CONTAINERID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8
+CNI_IFNAME=eth0
+CNI_COMMAND=ADD
+CNI_NETNS=/var/run/netns/3526ea0f-6dd9-4985-8f98-0db6d817abd4
+env:
+CNI_PATH=/opt/cni/bin:/usr/libexec/cni
+LANG=en_US.UTF-8
+INVOCATION_ID=77a9194a9cd04940a5fe1bdbca0e218b
+CNI_ARGS=IgnoreUnknown=1;K8S_POD_NAMESPACE=kube-system;K8S_POD_NAME=coredns-78fcd69978-n5khq;K8S_POD_INFRA_CONTAINER_ID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8;K8S_POD_UID=94f2364f-4fd6-4b74-9f5a-c68e2c6f97dd
+CNI_CONTAINERID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8
+GOTRACEBACK=crash
+PWD=/
+JOURNAL_STREAM=9:163692
+CNI_IFNAME=eth0
+CNI_COMMAND=ADD
+CNI_NETNS=/var/run/netns/3526ea0f-6dd9-4985-8f98-0db6d817abd4
+SHLVL=1
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+_=/usr/bin/env
+INPUT:
+{&quot;bridge&quot;:&quot;cni0&quot;,&quot;cniVersion&quot;:&quot;0.3.1&quot;,&quot;hairpinMode&quot;:true,&quot;ipMasq&quot;:true,&quot;ipam&quot;:{&quot;ranges&quot;:[[{&quot;subnet&quot;:&quot;10.85.0.0/16&quot;}],[{&quot;subnet&quot;:&quot;1100:200::/24&quot;}]],&quot;routes&quot;:[{&quot;dst&quot;:&quot;0.0.0.0/0&quot;},{&quot;dst&quot;:&quot;1100:200::1/24&quot;}],&quot;type&quot;:&quot;host-local&quot;},&quot;isGateway&quot;:true,&quot;name&quot;:&quot;crio&quot;,&quot;type&quot;:&quot;bridge&quot;}
+OUTPUT:
+{
+    &quot;cniVersion&quot;: &quot;0.3.1&quot;,
+    &quot;interfaces&quot;: [
+        {
+            &quot;name&quot;: &quot;cni0&quot;,
+            &quot;mac&quot;: &quot;8e:14:0e:0e:f1:b0&quot;
+        },
+        {
+            &quot;name&quot;: &quot;vethc4b25c20&quot;,
+            &quot;mac&quot;: &quot;7e:a5:58:f4:d9:93&quot;
+        },
+        {
+            &quot;name&quot;: &quot;eth0&quot;,
+            &quot;mac&quot;: &quot;4a:a6:1c:d8:66:2d&quot;,
+            &quot;sandbox&quot;: &quot;/var/run/netns/3526ea0f-6dd9-4985-8f98-0db6d817abd4&quot;
+        }
+    ],
+    &quot;ips&quot;: [
+        {
+            &quot;version&quot;: &quot;4&quot;,
+            &quot;interface&quot;: 2,
+            &quot;address&quot;: &quot;10.85.0.17/16&quot;,
+            &quot;gateway&quot;: &quot;10.85.0.1&quot;
+        },
+        {
+            &quot;version&quot;: &quot;6&quot;,
+            &quot;interface&quot;: 2,
+            &quot;address&quot;: &quot;1100:200::f/24&quot;,
+            &quot;gateway&quot;: &quot;1100:200::1&quot;
+        }
+    ],
+    &quot;routes&quot;: [
+        {
+            &quot;dst&quot;: &quot;0.0.0.0/0&quot;
+        },
+        {
+            &quot;dst&quot;: &quot;1100:200::1/24&quot;
+        }
+    ],
+    &quot;dns&quot;: {}
+}
+</code></pre>
+<p>When we look at <a href="https://github.com/containernetworking/cni/blob/master/SPEC.md#section-4-plugin-delegation">https://github.com/containernetworking/cni/blob/master/SPEC.md#section-4-plugin-delegation</a>, we can see the following:</p>
+<pre><code>It is however the responsibility of the CNI plugin, rather than the runtime, to invoke the IPAM plugin at the proper moment in its execution. The IPAM plugin must determine the interface IP/subnet, Gateway and Routes and return this information to the &quot;main&quot; plugin to apply. The IPAM plugin may obtain the information via a protocol (e.g. dhcp), data stored on a local filesystem, the &quot;ipam&quot; section of the Network Configuration file, etc.
+</code></pre>
+<p>The <code>bridge</code> plugin delegates IP address allocation to an <code>ipam</code> plugin here:
+<a href="https://github.com/containernetworking/plugins/blob/8632ace977f4126c8ded601975f564571c66b922/plugins/main/bridge/bridge.go#L465">https://github.com/containernetworking/plugins/blob/8632ace977f4126c8ded601975f564571c66b922/plugins/main/bridge/bridge.go#L465</a></p>
+<p>In file <code>/tmp/log/host-local</code>, we can see the following during an <code>ADD</code> command. This is the result of the delegation:</p>
+<pre><code>Fri Aug 27 07:55:52 EDT 2021
+=================================================================
+CNI params:
+CNI_PATH=/opt/cni/bin:/usr/libexec/cni
+CNI_ARGS=IgnoreUnknown=1;K8S_POD_NAMESPACE=kube-system;K8S_POD_NAME=coredns-78fcd69978-n5khq;K8S_POD_INFRA_CONTAINER_ID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8;K8S_POD_UID=94f2364f-4fd6-4b74-9f5a-c68e2c6f97dd
+CNI_CONTAINERID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8
+CNI_IFNAME=eth0
+CNI_COMMAND=ADD
+CNI_NETNS=/var/run/netns/3526ea0f-6dd9-4985-8f98-0db6d817abd4
+env:
+CNI_PATH=/opt/cni/bin:/usr/libexec/cni
+LANG=en_US.UTF-8
+INVOCATION_ID=77a9194a9cd04940a5fe1bdbca0e218b
+CNI_ARGS=IgnoreUnknown=1;K8S_POD_NAMESPACE=kube-system;K8S_POD_NAME=coredns-78fcd69978-n5khq;K8S_POD_INFRA_CONTAINER_ID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8;K8S_POD_UID=94f2364f-4fd6-4b74-9f5a-c68e2c6f97dd
+CNI_CONTAINERID=9b6e84650c3ed8407953c396efa391d2c2173388d8a8b3615c937a5779d526e8
+GOTRACEBACK=crash
+PWD=/
+JOURNAL_STREAM=9:163692
+CNI_IFNAME=eth0
+CNI_COMMAND=ADD
+CNI_NETNS=/var/run/netns/3526ea0f-6dd9-4985-8f98-0db6d817abd4
+SHLVL=2
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+_=/usr/bin/env
+INPUT:
+{&quot;bridge&quot;:&quot;cni0&quot;,&quot;cniVersion&quot;:&quot;0.3.1&quot;,&quot;hairpinMode&quot;:true,&quot;ipMasq&quot;:true,&quot;ipam&quot;:{&quot;ranges&quot;:[[{&quot;subnet&quot;:&quot;10.85.0.0/16&quot;}],[{&quot;subnet&quot;:&quot;1100:200::/24&quot;}]],&quot;routes&quot;:[{&quot;dst&quot;:&quot;0.0.0.0/0&quot;},{&quot;dst&quot;:&quot;1100:200::1/24&quot;}],&quot;type&quot;:&quot;host-local&quot;},&quot;isGateway&quot;:true,&quot;name&quot;:&quot;crio&quot;,&quot;type&quot;:&quot;bridge&quot;}
+OUTPUT:
+{
+    &quot;cniVersion&quot;: &quot;0.3.1&quot;,
+    &quot;ips&quot;: [
+        {
+            &quot;version&quot;: &quot;4&quot;,
+            &quot;address&quot;: &quot;10.85.0.17/16&quot;,
+            &quot;gateway&quot;: &quot;10.85.0.1&quot;
+        },
+        {
+            &quot;version&quot;: &quot;6&quot;,
+            &quot;address&quot;: &quot;1100:200::f/24&quot;,
+            &quot;gateway&quot;: &quot;1100:200::1&quot;
+        }
+    ],
+    &quot;routes&quot;: [
+        {
+            &quot;dst&quot;: &quot;0.0.0.0/0&quot;
+        },
+        {
+            &quot;dst&quot;: &quot;1100:200::1/24&quot;
+        }
+    ],
+    &quot;dns&quot;: {}
+}
+</code></pre>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">December 31, 2021</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../../ceph/ceph-manual-test/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Ceph manual test with qemu
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../../linux/cgroups/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              cgroups
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

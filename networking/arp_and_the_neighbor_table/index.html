@@ -1,0 +1,1460 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>ARP and the Neighbor table - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#arp-and-the-neighbor-table" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ARP and the Neighbor table
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/analyzing-cni/" class="md-nav__link">
+        Analyzing CNI calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/libvirt-uefi-without-secureboot/" class="md-nav__link">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        ARP and the Neighbor table
+      </a>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bpf-and-tcpdump/" class="md-nav__link">
+        BPF and tcpdump
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../netlink/" class="md-nav__link">
+        Netlink
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_mirror_registry/" class="md-nav__link">
+        Installing a cluster with a mirror registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="arp-and-the-neighbor-table">ARP and the neighbor table</h1>
+<p>Document of reference: <a href="http://haifux.org/lectures/180/netLec2.pdf">http://haifux.org/lectures/180/netLec2.pdf</a></p>
+<h1 id="disabling-arp">Disabling ARP</h1>
+<h2 id="nud-noarp">NUD NOARP</h2>
+<p>From <a href="http://haifux.org/lectures/180/netLec2.pdf">http://haifux.org/lectures/180/netLec2.pdf</a></p>
+<pre><code>Neighboring Subsystem – states
+● Special states:
+● NUD_NOARP
+● NUD_PERMANENT
+● No state transitions are allowed from these states to another 
+state.
+</code></pre>
+<p>This means that if an ARP entry ends up in <code>NUD_NOARP</code>, it will not time out, update or change in any way. 
+An administrator needs to delete the ARP entry for ARP resolution to work again properly for the IP.</p>
+<p>List NOARP entries:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip neigh ls nud noarp
+172.16.2.9 dev lo lladdr 00:00:00:00:00:00 NOARP
+127.0.0.1 dev lo lladdr 00:00:00:00:00:00 NOARP
+ff02::1:ff14:62d7 dev vlan902 lladdr 33:33:ff:14:62:d7 NOARP
+ff02::1:ff8d:846d dev vlan903 lladdr 33:33:ff:8d:84:6d NOARP
+ff02::16 dev ovs-bond-if1 lladdr 33:33:00:00:00:16 NOARP
+ff02::1:ff9f:c668 dev em1 lladdr 33:33:ff:9f:c6:68 NOARP
+ff02::1 dev lx-bond0 lladdr 33:33:00:00:00:01 NOARP
+ff02::16 dev vlan901 lladdr 33:33:00:00:00:16 NOARP
+ff02::16 dev em1 lladdr 33:33:00:00:00:16 NOARP
+ff02::16 dev br-ex lladdr 33:33:00:00:00:16 NOARP
+ff02::1:ff03:a0eb dev vlan901 lladdr 33:33:ff:03:a0:eb NOARP
+ff02::16 dev vlan902 lladdr 33:33:00:00:00:16 NOARP
+ff02::2 dev em4 lladdr 33:33:00:00:00:02 NOARP
+ff02::16 dev veth3 lladdr 33:33:00:00:00:16 NOARP
+ff02::16 dev vlan903 lladdr 33:33:00:00:00:16 NOARP
+ff02::16 dev ovs-bond-if0 lladdr 33:33:00:00:00:16 NOARP
+ff02::1:ff24:4974 dev ovs-bond-if1 lladdr 33:33:ff:24:49:74 NOARP
+ff02::16 dev vxlan_sys_4789 lladdr 33:33:00:00:00:16 NOARP
+ff02::1:ffe5:da4c dev br-ex lladdr 33:33:ff:e5:da:4c NOARP
+ff02::16 dev em4 lladdr 33:33:00:00:00:16 NOARP
+ff02::2 dev vlan901 lladdr 33:33:00:00:00:02 NOARP
+ff02::2 dev em1 lladdr 33:33:00:00:00:02 NOARP
+ff02::2 dev br-ex lladdr 33:33:00:00:00:02 NOARP
+ff02::1:ff9f:c66b dev em4 lladdr 33:33:ff:9f:c6:6b NOARP
+ff02::1:ff91:8481 dev ovs-bond-if0 lladdr 33:33:ff:91:84:81 NOARP
+ff02::2 dev vlan902 lladdr 33:33:00:00:00:02 NOARP
+ff02::16 dev lx-bond0 lladdr 33:33:00:00:00:16 NOARP
+ff02::1:ff5f:4750 dev veth3 lladdr 33:33:ff:5f:47:50 NOARP
+::1 dev lo lladdr 00:00:00:00:00:00 NOARP
+ff02::1:ffb7:7124 dev vxlan_sys_4789 lladdr 33:33:ff:b7:71:24 NOARP
+ff02::2 dev vlan903 lladdr 33:33:00:00:00:02 NOARP
+ff02::1:ff54:bc0d dev lx-bond0 lladdr 33:33:ff:54:bc:0d NOARP
+</code></pre>
+<h2 id="per-interface">Per interface</h2>
+<p>ARP can be disabled globally on a per interface basis. 
+This may be useful e.g. when using some failover / redundancy solution implemented in user space:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+64 bytes from 192.168.123.11: icmp_seq=1 ttl=64 time=0.342 ms
+64 bytes from 192.168.123.11: icmp_seq=2 ttl=64 time=0.181 ms
+^C
+--- 192.168.123.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.181/0.261/0.342/0.082 ms
+[root@overcloud-novacomputeiha-0 ~]# ip r g 192.168.123.11
+192.168.123.11 dev lx-bond0.905 src 192.168.123.10 
+    cache 
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp off
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls | grep 192.168.123.11
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls nud noarp | grep 192.168.123.11
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+^C
+--- 192.168.123.11 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1001ms
+</code></pre>
+<p>The interface will show <code>NOARP</code>:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip link ls dev lx-bond0.905
+31: lx-bond0.905@lx-bond0: &lt;BROADCAST,MULTICAST,NOARP,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether fe:b8:03:54:bc:0d brd ff:ff:ff:ff:ff:ff
+</code></pre>
+<p>This also means that the opposite side cannot resolve the IP address:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ping 192.168.123.10
+PING 192.168.123.10 (192.168.123.10) 56(84) bytes of data.
+^C
+--- 192.168.123.10 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+
+[root@overcloud-novacomputeiha-0 ~]# arp -n | grep 192.168.123
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 arp -n | grep 192.168.123
+192.168.123.10                   (incomplete)                              veth2
+[root@overcloud-novacomputeiha-0 ~]# 
+</code></pre>
+<h2 id="per-arp-entry">Per ARP entry</h2>
+<p>Let's set NOARP for 192.168.123.11:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip neigh ls | grep 192.168.123
+192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 REACHABLE
+[root@overcloud-novacomputeiha-0 ~]# ip neigh change 192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 nud noarp
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls | grep 192.168.123
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls nud noarp | grep 192.168.123
+192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 NOARP
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+64 bytes from 192.168.123.11: icmp_seq=1 ttl=64 time=0.344 ms
+^C
+--- 192.168.123.11 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.344/0.344/0.344/0.000 ms
+</code></pre>
+<p>Note that flipping the state for the interface resets the NOARP entry for the neighbor:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp off
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls nud noarp | grep 192.168.123
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp on
+[root@overcloud-novacomputeiha-0 ~]# ip neigh ls nud noarp | grep 192.168.123
+[root@overcloud-novacomputeiha-0 ~]# ip neigh change 192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 nud noarp
+RTNETLINK answers: No such file or directory
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+64 bytes from 192.168.123.11: icmp_seq=1 ttl=64 time=0.480 ms
+^C
+--- 192.168.123.11 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.480/0.480/0.480/0.000 ms
+[root@overcloud-novacomputeiha-0 ~]# ip neigh change 192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 nud noarp
+[root@overcloud-novacomputeiha-0 ~]# 
+</code></pre>
+<p>We can see that ARP learning is disabled with the following test. Note that we have to ping from the neighbor.
+Otherwise, even with correct ARP resolution, this won't work:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+^C
+--- 192.168.123.11 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ip link set dev veth2 address 22:a6:81:76:8a:78
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+^C
+--- 192.168.123.11 ping statistics ---
+5 packets transmitted, 0 received, 100% packet loss, time 4000ms
+
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ping 192.168.123.10
+PING 192.168.123.10 (192.168.123.10) 56(84) bytes of data.
+64 bytes from 192.168.123.10: icmp_seq=1 ttl=64 time=0.426 ms
+^C
+--- 192.168.123.10 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.426/0.426/0.426/0.000 ms
+</code></pre>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ip a ls dev veth2
+33: veth2@if32: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 22:a6:81:76:8a:78 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.123.11/24 scope global veth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20a6:81ff:fe76:8a78/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ip link set dev veth2 address 22:a6:81:76:8a:79
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ip a ls dev veth2
+33: veth2@if32: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 22:a6:81:76:8a:79 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.123.11/24 scope global veth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20a6:81ff:fe76:8a78/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+^C
+--- 192.168.123.11 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp off
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp on
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+64 bytes from 192.168.123.11: icmp_seq=1 ttl=64 time=0.566 ms
+^C
+--- 192.168.123.11 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.566/0.566/0.566/0.000 ms
+[root@overcloud-novacomputeiha-0 ~]# 
+</code></pre>
+<p>Here's how it looks with NUD NOARP:</p>
+<pre><code>[root@overcloud-novacomputeiha-0 ~]# ip neigh change 192.168.123.11 dev lx-bond0.905 lladdr 22:a6:81:76:8a:78 nud noarp
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ping 192.168.123.10
+PING 192.168.123.10 (192.168.123.10) 56(84) bytes of data.
+64 bytes from 192.168.123.10: icmp_seq=1 ttl=64 time=0.175 ms
+^C
+--- 192.168.123.10 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.175/0.175/0.175/0.000 ms
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+64 bytes from 192.168.123.11: icmp_seq=1 ttl=64 time=0.229 ms
+64 bytes from 192.168.123.11: icmp_seq=2 ttl=64 time=0.190 ms
+^C
+--- 192.168.123.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.190/0.209/0.229/0.024 ms
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ip link set dev veth2 address 22:a6:81:76:8a:79
+[root@overcloud-novacomputeiha-0 ~]# ping 192.168.123.11
+PING 192.168.123.11 (192.168.123.11) 56(84) bytes of data.
+^C
+--- 192.168.123.11 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ping 192.168.123.10
+PING 192.168.123.10 (192.168.123.10) 56(84) bytes of data.
+^C
+--- 192.168.123.10 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp off
+[root@overcloud-novacomputeiha-0 ~]# ip link set dev lx-bond0.905 arp on
+[root@overcloud-novacomputeiha-0 ~]# ip netns exec test2 ping 192.168.123.10
+PING 192.168.123.10 (192.168.123.10) 56(84) bytes of data.
+64 bytes from 192.168.123.10: icmp_seq=1 ttl=64 time=0.377 ms
+^C
+--- 192.168.123.10 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.377/0.377/0.377/0.000 ms
+</code></pre>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 13, 2020</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../accept-source-routing/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Accept Source Routing
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../bpf-and-tcpdump/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              BPF and tcpdump
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

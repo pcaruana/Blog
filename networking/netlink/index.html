@@ -1,0 +1,1555 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>Netlink - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quick-guide-for-netlink" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Netlink
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/analyzing-cni/" class="md-nav__link">
+        Analyzing CNI calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/libvirt-uefi-without-secureboot/" class="md-nav__link">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arp_and_the_neighbor_table/" class="md-nav__link">
+        ARP and the Neighbor table
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bpf-and-tcpdump/" class="md-nav__link">
+        BPF and tcpdump
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Netlink
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Netlink
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-netlink" class="md-nav__link">
+    What is Netlink?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#who-uses-netlink-examples" class="md-nav__link">
+    Who uses Netlink? Examples
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#socket-programming" class="md-nav__link">
+    Socket programming
+  </a>
+  
+    <nav class="md-nav" aria-label="Socket programming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c" class="md-nav__link">
+    C
+  </a>
+  
+    <nav class="md-nav" aria-label="C">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    Resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#program" class="md-nav__link">
+    Program
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    Python
+  </a>
+  
+    <nav class="md-nav" aria-label="Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resources_1" class="md-nav__link">
+    Resources
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#program_1" class="md-nav__link">
+    Program
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-netlink-programming-example" class="md-nav__link">
+    How to use Netlink - programming example
+  </a>
+  
+    <nav class="md-nav" aria-label="How to use Netlink - programming example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c_1" class="md-nav__link">
+    C
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python_1" class="md-nav__link">
+    Python
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources_2" class="md-nav__link">
+    Resources
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_mirror_registry/" class="md-nav__link">
+        Installing a cluster with a mirror registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="quick-guide-for-netlink">Quick guide for Netlink</h1>
+<h3 id="what-is-netlink">What is Netlink?</h3>
+<p>A means to exchange networking information between kernel and userspace:</p>
+<pre><code>The Netlink socket family is a Linux kernel interface used for inter-process communication (IPC) 
+between both the kernel and userspace processes, and between different userspace processes, 
+in a way similar to the Unix domain sockets. Similarly to the Unix domain sockets, and unlike
+INET sockets, Netlink communication cannot traverse host boundaries. However, while the Unix domain
+sockets use the file system namespace, Netlink processes are usually addressed by process identifiers (PIDs). [3]
+
+Netlink is designed and used for transferring miscellaneous networking information between the 
+kernel space and userspace processes. Networking utilities, such as the iproute2 family and the utilities
+used for configuring mac80211-based wireless drivers, use Netlink to communicate with the Linux kernel
+from userspace. Netlink provides a standard socket-based interface for userspace processes, and a 
+kernel-side API for internal use by kernel modules. Originally, Netlink used the AF_NETLINK socket family. 
+</code></pre>
+<p><a href="https://en.wikipedia.org/wiki/Netlink">https://en.wikipedia.org/wiki/Netlink</a></p>
+<p>Netlink is defined and thoroughly described in <a href="https://tools.ietf.org/html/rfc3549">RFC3549</a></p>
+<p>The idea is to keep code that's critical for performance in the kernel and to move anything related to control and management in user-space (<a href="https://www.linuxjournal.com/article/7356">https://www.linuxjournal.com/article/7356</a>).</p>
+<pre><code>Netlink socket is a special IPC used for transferring information between kernel and user-space processes. 
+It provides a full-duplex communication link between the two by way of standard socket APIs for user-space 
+processes and a special kernel API for kernel modules. Netlink socket uses the address family AF_NETLINK, as 
+compared to AF_INET used by TCP/IP socket. Each netlink socket feature defines its own protocol type in the 
+kernel header file include/linux/netlink.h. 
+</code></pre>
+<p><a href="https://www.linuxjournal.com/article/7356">https://www.linuxjournal.com/article/7356</a></p>
+<h3 id="who-uses-netlink-examples">Who uses Netlink? Examples</h3>
+<p>Just a few examples:
+* iproute2 </p>
+<pre><code>[root@dell-r430-30 ~]# strace -e trace=network /usr/sbin/ip route
+socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 3
+setsockopt(3, SOL_SOCKET, SO_SNDBUF, [32768], 4) = 0
+setsockopt(3, SOL_SOCKET, SO_RCVBUF, [1048576], 4) = 0
+bind(3, {sa_family=AF_NETLINK, pid=0, groups=00000000}, 12) = 0
+getsockname(3, {sa_family=AF_NETLINK, pid=161345, groups=00000000}, [12]) = 0
+sendto(3, &quot;(\0\0\0\32\0\1\3\330A\367[\0\0\0\0\2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0&quot;..., 40, 0, NULL, 0) = 40
+recvmsg(3, {msg_name(12)={sa_family=AF_NETLINK, pid=0, groups=00000000}, msg_iov(1)=[{&quot;4\0\0\0\30\0\2\0\330A\367[Av\2\0\2\0\0\0\376\3\0\1\0\0\0\0\10\0\17\0&quot;..., 32768}], msg_controllen=0, msg_flags=0}, 0) = 1312
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+default via 10.10.99.254 dev br-redhat 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+10.10.96.0/22 dev br-redhat proto kernel scope link src 10.10.96.194 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+169.254.0.0/16 dev br-redhat scope link metric 1008 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+169.254.0.0/16 dev br-provis scope link metric 1009 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+169.254.0.0/16 dev br-trunk1 scope link metric 1010 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+169.254.0.0/16 dev br-stonith scope link metric 1011 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+169.254.0.0/16 dev br-trunk2 scope link metric 1012 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+192.168.111.0/24 dev br-stonith proto kernel scope link src 192.168.111.1 
+socket(AF_LOCAL, SOCK_DGRAM|SOCK_CLOEXEC, 0) = 4
+192.168.122.0/24 dev virbr0 proto kernel scope link src 192.168.122.1 
+recvmsg(3, {msg_name(12)={sa_family=AF_NETLINK, pid=0, groups=00000000}, msg_iov(1)=[{&quot;\24\0\0\0\3\0\2\0\330A\367[Av\2\0\0\0\0\0&quot;, 32768}], msg_controllen=0, msg_flags=0}, 0) = 20
++++ exited with 0 +++
+</code></pre>
+<ul>
+<li>OVS</li>
+</ul>
+<h3 id="socket-programming">Socket programming</h3>
+<p>Let's do a little detour towards socket programming, as this will teach the basics for Netlink programming.</p>
+<h4 id="c">C</h4>
+<h5 id="resources">Resources</h5>
+<p>The Linux Programming Reference is an excellent book for C programming with Linux.</p>
+<h5 id="program">Program</h5>
+<p>Let's start with a generic example for IPC via sockets in C. The following contains an example for a UDP socket:
+<a href="https://github.com/pablocaruana/blog/blob/master/messenger.c">https://github.com/pablocaruana/blog/blob/master/messenger.c</a></p>
+<p>Compile:</p>
+<pre><code>[pcaruana@wks-pcaruana c]$ gcc messenger.c -o messenger
+[pcaruana@wks-pcaruana c]$ 
+</code></pre>
+<p>Then run, in one CLI the receiver:</p>
+<pre><code>[pcaruana@wks-pcaruana c]$ ./messenger receiver
+This node is a receiver
+Starting receiver
+Received datagram from 127.0.0.1
+Datagram content: MSG
+Received datagram from 127.0.0.1
+Datagram content: MSG
+</code></pre>
+<p>In the other CLI the sender:</p>
+<pre><code>[pcaruana@wks-pcaruana c]$ ./messenger sender
+This node is a sender
+Starting sender
+[pcaruana@wks-pcaruana c]$ ./messenger sender
+This node is a sender
+Starting sender
+</code></pre>
+<h4 id="python">Python</h4>
+<h5 id="resources_1">Resources</h5>
+<p><a href="https://wiki.python.org/moin/UdpCommunication">https://wiki.python.org/moin/UdpCommunication</a></p>
+<h5 id="program_1">Program</h5>
+<p>Let's start with a generic example for IPC via sockets in Python. The following contains an example for a UDP socket:
+<a href="https://github.com/pablocaruana/blog/blob/master/messenger.py">https://github.com/pablocaruana/blog/blob/master/messenger.py</a></p>
+<p>Run the server:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ ./messenger.py rec
+This node is a receiver
+Starting receiver
+Received datagram from  ('127.0.0.1', 58172)
+Datagram content:  b'MSG'
+Received datagram from  ('127.0.0.1', 39735)
+Datagram content:  b'MSG'
+</code></pre>
+<p>Run the client in another CLI:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ ./messenger.py sender
+This node is a sender
+Starting sender
+[pcaruana@wks-pcaruana python]$ ./messenger.py sender
+This node is a sender
+Starting sender
+[pcaruana@wks-pcaruana python]$ 
+</code></pre>
+<h3 id="how-to-use-netlink-programming-example">How to use Netlink - programming example</h3>
+<p><a href="https://www.linuxjournal.com/article/7356">https://www.linuxjournal.com/article/7356</a> has a walkthrough for using Netlink in C.</p>
+<p><a href="https://www.linuxjournal.com/article/8498">https://www.linuxjournal.com/article/8498</a> as well.</p>
+<h4 id="c_1">C</h4>
+<p>The following C application monitors any route changes that happen in the kernel: 
+<a href="https://github.com/pablocaruana/blog/blob/master/netlink.c">https://github.com/pablocaruana/blog/blob/master/netlink.c</a></p>
+<p>Compile the code:</p>
+<pre><code>gcc netlink.c -o netlink
+</code></pre>
+<p>Start the application and while the application is running, modify the routing table:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ sudo ip r a 4.3.2.0/30 via 127.0.0.1
+[pcaruana@wks-pcaruana python]$ sudo ip r d 4.3.2.0/30 via 127.0.0.1
+</code></pre>
+<p>The application will yield the following. We can see live when the route is added and when it is deleted:</p>
+<pre><code>[pcaruana@wks-pcaruana c]$ ./netlink 
+Starting netlink receiverd
+nlmsg_len: 60, nlmsg_type 24, nlmsg_flags: 1536, nlmsg_seq: 1543015716, nlmsg_pid: 15333
+Netmask: 30
+nlmsg_len: 60, nlmsg_type 25, nlmsg_flags: 0, nlmsg_seq: 1543015717, nlmsg_pid: 15343
+Netmask: 30
+</code></pre>
+<p>Note that a more complete example can be found here: <a href="https://gist.github.com/cl4u2/5204374">https://gist.github.com/cl4u2/5204374</a></p>
+<h4 id="python_1">Python</h4>
+<p>The following python application monitors any route changes that happen in the kernel:
+<a href="https://github.com/pablocaruana/blog/blob/master/netlink.py">https://github.com/pablocaruana/blog/blob/master/netlink.py</a></p>
+<p>Start the application and while the application is running, modify the routing table:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ sudo ip r a 4.3.2.0/30 via 127.0.0.1
+[pcaruana@wks-pcaruana python]$ sudo ip r d 4.3.2.0/30 via 127.0.0.1
+</code></pre>
+<p>The application will yield the following. We can see live when the route is added and when it is deleted:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ ./netlink.py 
+Netlink header:  60 RTM_NEWROUTE 1536 1543012056 13037
+Netlink payload:  2 30 0 0 254 3 0 1 0
+Netmask: 30
+IP:  b'\x04\x03\x02\x00'
+Netlink header:  60 RTM_DELROUTE 0 1543012061 13047
+Netlink payload:  2 30 0 0 254 3 0 1 0
+Netmask: 30
+IP:  b'\x04\x03\x02\x00'
+</code></pre>
+<p>strace'ing the application reveals even more about the message structure:</p>
+<pre><code>[pcaruana@wks-pcaruana python]$ strace -e trace=network ./netlink.py 
+socket(AF_NETLINK, SOCK_RAW|SOCK_CLOEXEC, NETLINK_ROUTE) = 3
+bind(3, {sa_family=AF_NETLINK, nl_pid=13307, nl_groups=0x000040}, 12) = 0
+recvfrom(3, {{len=60, type=RTM_NEWROUTE, flags=NLM_F_EXCL|NLM_F_CREATE, seq=1543012305, pid=13310}, {rtm_family=AF_INET, rtm_dst_len=30, rtm_src_len=0, rtm_tos=0, rtm_table=RT_TABLE_MAIN, rtm_protocol=RTPROT_BOOT, rtm_scope=RT_SCOPE_UNIVERSE, rtm_type=RTN_UNICAST, rtm_flags=0}, [{{nla_len=8, nla_type=RTA_TABLE}, RT_TABLE_MAIN}, {{nla_len=8, nla_type=RTA_DST}, 4.3.2.0}, {{nla_len=8, nla_type=RTA_GATEWAY}, 127.0.0.1}, {{nla_len=8, nla_type=RTA_OIF}, if_nametoindex(&quot;lo&quot;)}]}, 65535, 0, NULL, NULL) = 60
+Netlink header:  60 RTM_NEWROUTE 1536 1543012305 13310
+Netlink payload:  2 30 0 0 254 3 0 1 0
+Netmask: 30
+IP:  b'\x04\x03\x02\x00'
+recvfrom(3, {{len=60, type=RTM_DELROUTE, flags=0, seq=1543012307, pid=13320}, {rtm_family=AF_INET, rtm_dst_len=30, rtm_src_len=0, rtm_tos=0, rtm_table=RT_TABLE_MAIN, rtm_protocol=RTPROT_BOOT, rtm_scope=RT_SCOPE_UNIVERSE, rtm_type=RTN_UNICAST, rtm_flags=0}, [{{nla_len=8, nla_type=RTA_TABLE}, RT_TABLE_MAIN}, {{nla_len=8, nla_type=RTA_DST}, 4.3.2.0}, {{nla_len=8, nla_type=RTA_GATEWAY}, 127.0.0.1}, {{nla_len=8, nla_type=RTA_OIF}, if_nametoindex(&quot;lo&quot;)}]}, 65535, 0, NULL, NULL) = 60
+Netlink header:  60 RTM_DELROUTE 0 1543012307 13320
+Netlink payload:  2 30 0 0 254 3 0 1 0
+Netmask: 30
+IP:  b'\x04\x03\x02\x00'
+recvfrom(3, 
+</code></pre>
+<h3 id="resources_2">Resources</h3>
+<p><a href="https://en.wikipedia.org/wiki/Netlink">https://en.wikipedia.org/wiki/Netlink</a></p>
+<p><a href="https://tools.ietf.org/html/rfc3549">https://tools.ietf.org/html/rfc3549</a></p>
+<p><a href="https://www.linuxjournal.com/article/7356">https://www.linuxjournal.com/article/7356</a></p>
+<p><a href="http://inai.de/documents/Netlink_Protocol.pdf">http://inai.de/documents/Netlink_Protocol.pdf</a></p>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 13, 2020</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../geneve_tunneling/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Geneve tunneling
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../ovn_standalone_on_fedora31/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              OVN standalone on Fedora 31
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2086 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>BPF and tcpdump - Pablo Caruana Blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#546d78">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="blue-grey" data-md-color-accent="red">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tcpdump-expressions-and-bpf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Pablo Caruana Blog" class="md-header__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pablo Caruana Blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              BPF and tcpdump
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Pablo Caruana Blog" class="md-nav__button md-logo" aria-label="Pablo Caruana Blog" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Pablo Caruana Blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Ceph
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ceph" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ceph
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ceph/ceph-manual-test/" class="md-nav__link">
+        Ceph manual test with qemu
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Containers
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Containers" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Containers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/analyzing-cni/" class="md-nav__link">
+        Analyzing CNI calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/list_docker_registry_containers/" class="md-nav__link">
+        List container images in registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/cgroups/" class="md-nav__link">
+        cgroups
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/containers/" class="md-nav__link">
+        Containers in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/hugepages/" class="md-nav__link">
+        Hugepages
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/ipxe-boot-environment/" class="md-nav__link">
+        iPXE boot environment on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/java-idrac-issues/" class="md-nav__link">
+        Java Idrac Issues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/meson/" class="md-nav__link">
+        meson
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/namespaces/" class="md-nav__link">
+        namespaces
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/old_java_version_with_xorgs_in_container/" class="md-nav__link">
+        Old Java inside a container with xorgs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/get-process-cgroup-info-and-limits/" class="md-nav__link">
+        Retrieving process cgroup resource usage and limit info
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/libvirt-uefi-without-secureboot/" class="md-nav__link">
+        RHEL Booting a virtual machine with UEFI but without secure boot
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/setting-journalctl-limits/" class="md-nav__link">
+        Setting journalctl limits
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      <label class="md-nav__link" for="__nav_5">
+        Networking
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Networking" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Networking
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../accept-source-routing/" class="md-nav__link">
+        Accept Source Routing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arp_and_the_neighbor_table/" class="md-nav__link">
+        ARP and the Neighbor table
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          BPF and tcpdump
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        BPF and tcpdump
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tcpdump-expressions-and-bpf" class="md-nav__link">
+    tcpdump expressions and BPF
+  </a>
+  
+    <nav class="md-nav" aria-label="tcpdump expressions and BPF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tcpdumps-inconsistent-bpf-expression-compiler" class="md-nav__link">
+    tcpdump's inconsistent BPF expression compiler
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-tcpdump-compile-user-provided-expressions-source-code-analysis" class="md-nav__link">
+    How does tcpdump compile user provided expressions - Source code analysis
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-a-filter-expression-compiler" class="md-nav__link">
+    Building a filter expression compiler
+  </a>
+  
+    <nav class="md-nav" aria-label="Building a filter expression compiler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-dependencies" class="md-nav__link">
+    Installing dependencies
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-the-code" class="md-nav__link">
+    Creating the code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compiling-the-code" class="md-nav__link">
+    Compiling the code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-tool" class="md-nav__link">
+    Using the tool
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bpf-bytecode" class="md-nav__link">
+    BPF Bytecode
+  </a>
+  
+    <nav class="md-nav" aria-label="BPF Bytecode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compiling-bpf-bytecode" class="md-nav__link">
+    Compiling BPF Bytecode
+  </a>
+  
+    <nav class="md-nav" aria-label="Compiling BPF Bytecode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tcpdump-with-filter-expression" class="md-nav__link">
+    tcpdump with filter expression
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tcpdump-with-explicit-offset-expression" class="md-nav__link">
+    tcpdump with explicit offset expression
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-bpf-asm-like-code" class="md-nav__link">
+    Using BPF asm-like code
+  </a>
+  
+    <nav class="md-nav" aria-label="Using BPF asm-like code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compiling-helper-binaries" class="md-nav__link">
+    Compiling helper binaries
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-byte-code" class="md-nav__link">
+    Building Byte code
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-bpf-in-iptables-expressions" class="md-nav__link">
+    Using BPF in iptables expressions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bonding_in_linux/" class="md-nav__link">
+        Bonding in Linux
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../juniper_x520/" class="md-nav__link">
+        Configure Juniper switch
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../haproxy-and-h2c/" class="md-nav__link">
+        haproxy and HTTP/2
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install-openvswitch-on-rocky/" class="md-nav__link">
+        Install Open vSwitch on Rocky Linux 8
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../geneve_tunneling/" class="md-nav__link">
+        Geneve tunneling
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../netlink/" class="md-nav__link">
+        Netlink
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovn_standalone_on_fedora31/" class="md-nav__link">
+        OVN standalone on Fedora 31
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_recirculation/" class="md-nav__link">
+        OVS packet recirculation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs-vxlan-tunnels-and-dscp/" class="md-nav__link">
+        OVS VXLAN tunnels and DSCP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ovs_with_gdb/" class="md-nav__link">
+        OVS with GDB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../useful-commands/" class="md-nav__link">
+        Useful commands
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wireguard/" class="md-nav__link">
+        Wireguard
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        OpenShift
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenShift" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          OpenShift
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/alertmanager/" class="md-nav__link">
+        AlertManager
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/cpu-manager-with-custom-machine-config-pool/" class="md-nav__link">
+        CPU manager with custom MachineConfigPool
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/crio-conmon-runc/" class="md-nav__link">
+        Crio vs conmon vs runc
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/etcd_perf/" class="md-nav__link">
+        Etcd Performance tests
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/get-vs-list-api-calls/" class="md-nav__link">
+        Get vs List API Calls
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_httpbin_tshark_sidecar/" class="md-nav__link">
+        Httpbin tshark sidecar container
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kubernetes_cluster/" class="md-nav__link">
+        Hints for installing kubernetes on Fedora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/HPA/" class="md-nav__link">
+        Horizontal Pod Autoscaler
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/how_rhcos_updates_work/" class="md-nav__link">
+        How RHCOS updates work
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ocp4-infra-nodes-with-machineset-without-worker-label/" class="md-nav__link">
+        Infra nodes with MachineSets without worker label
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingresscontroller_router_sharding_ocp_on_osp/" class="md-nav__link">
+        Ingress Controller Sharding OCP on OSP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ingress-controller-sharding-on-separate-vip/" class="md-nav__link">
+        Ingress Controller Sharding on separate VIP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_mirror_registry/" class="md-nav__link">
+        Installing a cluster with a mirror registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/istio-1.6-on-ocp.4.x/" class="md-nav__link">
+        Istio 1.6 on OpenShift 4.x
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kata/" class="md-nav__link">
+        kata containers and the kata operatora
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/ovn-kind-hybrid-overlay/" class="md-nav__link">
+        Kind with OVN Kubernetes Hybrid Overlay
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/kind-with-private-registry/" class="md-nav__link">
+        Kind with private registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/mounting-container-image/" class="md-nav__link">
+        Mount a container image
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/install_openshift_on_openstack/" class="md-nav__link">
+        OpenShift on OpenStack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/private-registry/" class="md-nav__link">
+        Private container registry
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/proxy-ocp-4.5/" class="md-nav__link">
+        Proxy OCP 4.5
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/scc/" class="md-nav__link">
+        Security Context Constraints (SCC)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/fix-selinux-labels-coreos/" class="md-nav__link">
+        SElinux labels fix
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sctp/" class="md-nav__link">
+        SCTP
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/openshift_troubleshooting_etcd_state/" class="md-nav__link">
+        Troubleshooting etcd state
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-commands/" class="md-nav__link">
+        Useful commands for OpenShift
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/useful-ocp-sdn-commands/" class="md-nav__link">
+        Useful commands for OpenShift SDN
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openshift/troubleshooting_openshift_on_openstack_worker_creation/" class="md-nav__link">
+        Troubleshooting OpenShift on OpenStack worker creation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        OpenStack
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OpenStack" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          OpenStack
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/reattach_to_running_deployment/" class="md-nav__link">
+        Reattach to running deployment
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../openstack/using_clouds_yaml/" class="md-nav__link">
+        Using clouds.yaml
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        OperatorSDK
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="OperatorSDK" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          OperatorSDK
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operator-sdk/operator-sdk-reconciliation/" class="md-nav__link">
+        Controller Reconciliation
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>BPF and tcpdump</h1>
+                
+                <h2 id="tcpdump-expressions-and-bpf">tcpdump expressions and BPF</h2>
+<h3 id="introduction">Introduction</h3>
+<p>For a good introduction into tcpdump's BPF compiler, look at the following blog post, then come back here:</p>
+<ul>
+<li><a href="https://blog.cloudflare.com/bpf-the-forgotten-bytecode/">https://blog.cloudflare.com/bpf-the-forgotten-bytecode/</a></li>
+</ul>
+<h3 id="tcpdumps-inconsistent-bpf-expression-compiler">tcpdump's inconsistent BPF expression compiler</h3>
+<p>Now that you have a good idea about this, let's look at how tcpdump compiles the following filter expression:</p>
+<pre><code>icmp
+</code></pre>
+<p>This will be straight forward:</p>
+<pre><code>[root@host ~]# tcpdump -i lo icmp -d
+(000) ldh      [12]
+(001) jeq      #0x800           jt 2    jf 5
+(002) ldb      [23]
+(003) jeq      #0x1             jt 4    jf 5
+(004) ret      #262144
+(005) ret      #0
+</code></pre>
+<p>We'd also expect this to be the same if we look at a file capture:</p>
+<pre><code>[root@host ~]# timeout 1 tcpdump -i lo -w lo.pcap
+dropped privs to tcpdump
+tcpdump: listening on lo, link-type EN10MB (Ethernet), capture size 262144 bytes
+0 packets captured
+6 packets received by filter
+0 packets dropped by kernel
+[root@host ~]# tcpdump -r lo.pcap icmp -d
+reading from file lo.pcap, link-type EN10MB (Ethernet)
+(000) ldh      [12]
+(001) jeq      #0x800           jt 2    jf 5             # &lt;---- ethertype for IP
+(002) ldb      [23]
+(003) jeq      #0x1             jt 4    jf 5             # &lt;---- IP protocol number for ICMP
+(004) ret      #262144
+(005) ret      #0
+</code></pre>
+<p>So far, so good and straight forward. We look at byte 23 and check if the IP protocol number is 1. Before that, we check the ethernet header in byte 12 and make sure that we are using IP.</p>
+<p>But what happens if we use this expression?</p>
+<pre><code>vlan
+</code></pre>
+<p>We'd expect to look into byte 12 of the ethernet header and make sure that we have the ethertype for 802.1q there. So we'd want to see 0x8100 and if we look for Q-in-Q we'd look for 0x88A8 and for double tagging we'd also look for 0x9100:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/EtherType">https://en.wikipedia.org/wiki/EtherType</a></li>
+</ul>
+<p>And if we apply the filter to our previously captured file, this is precisely what happens:</p>
+<pre><code>[root@host ~]# tcpdump -r lo.pcap vlan -d
+reading from file lo.pcap, link-type EN10MB (Ethernet)
+(000) ldh      [12]
+(001) jeq      #0x8100          jt 4    jf 2
+(002) jeq      #0x88a8          jt 4    jf 3
+(003) jeq      #0x9100          jt 4    jf 5
+(004) ret      #262144
+(005) ret      #0
+</code></pre>
+<p>Now, let's look at a live capture from the loopback interface. We should expect the same expression:</p>
+<pre><code>[root@host ~]# tcpdump -i lo vlan -d
+(000) ldb      [-4048]
+(001) jeq      #0x1             jt 6    jf 2
+(002) ldh      [12]
+(003) jeq      #0x8100          jt 6    jf 4
+(004) jeq      #0x88a8          jt 6    jf 5
+(005) jeq      #0x9100          jt 6    jf 7
+(006) ret      #262144
+(007) ret      #0
+</code></pre>
+<p>The expression is different now! Why is that? Well, the kernel has an internal optimization and will actually store VLAN information in a location with negative offset.</p>
+<p>The reason for this is that the kernel no longer passes vlan tag information as-is to libpcap. See <a href="https://bugs.launchpad.net/ubuntu/+source/tcpdump/+bug/1641429">https://bugs.launchpad.net/ubuntu/+source/tcpdump/+bug/1641429</a> for further details:</p>
+<pre><code>The kernel now longer passes vlan tag information as-is to libpcap, instead BPF needs to access ancillary data.
+
+That is the reason &quot;vlan 114&quot; works (because it does the right thing), and a manual filter doesn't, because libpcap never actually sees this.
+
+Offsets are negative because this is the way to access this ancillary data (like vlan tags) in the Linux kernel:
+https://github.com/torvalds/linux/blob/6f0d349d922ba44e4348a17a78ea51b7135965b1/include/uapi/linux/filter.h#L60
+</code></pre>
+<p>And see the kernel documentation as well: <a href="https://github.com/torvalds/linux/blob/7acac4b3196caee5e21fb5ea53f8bc124e6a16fc/include/uapi/linux/filter.h#L60">https://github.com/torvalds/linux/blob/7acac4b3196caee5e21fb5ea53f8bc124e6a16fc/include/uapi/linux/filter.h#L60</a>:</p>
+<pre><code>/* RATIONALE. Negative offsets are invalid in BPF.
+   We use them to reference ancillary data.
+   Unlike introduction new instructions, it does not break
+   existing compilers/optimizers.
+ */
+</code></pre>
+<p>For example, let's look for VLAN 32 (0x20):</p>
+<pre><code>[root@host ~]# tcpdump -r lo.pcap vlan 32 -d
+reading from file lo.pcap, link-type EN10MB (Ethernet)
+(000) ldh      [12]                                  # &lt;---- look for dot1q, etc. at byte 12
+(001) jeq      #0x8100          jt 4    jf 2
+(002) jeq      #0x88a8          jt 4    jf 3
+(003) jeq      #0x9100          jt 4    jf 8
+(004) ldh      [14]
+(005) and      #0xfff                                # &lt;---- extract the last 12 bits from the field (VID)
+(006) jeq      #0x20            jt 7    jf 8         # &lt;---- check for VLAN 32
+(007) ret      #262144
+(008) ret      #0
+</code></pre>
+<p>That, too, makes sense. But if we do a live capture, the logic becomes more complex:</p>
+<pre><code>[root@host ~]# tcpdump -i lo vlan 32 -d
+(000) ldb      [-4048]
+(001) jeq      #0x1             jt 6    jf 2       # &lt;---- does the kernel special field report this as a VLAN?
+(002) ldh      [12]                                # &lt;---- otherwise fallback and check the on-wire format as above
+(003) jeq      #0x8100          jt 6    jf 4
+(004) jeq      #0x88a8          jt 6    jf 5
+(005) jeq      #0x9100          jt 6    jf 14
+(006) ldb      [-4048]                             # &lt;---- does the kernel special field report this as a VLAN?
+(007) jeq      #0x1             jt 8    jf 10
+(008) ldb      [-4052]
+(009) ja       11
+(010) ldh      [14]
+(011) and      #0xfff
+(012) jeq      #0x20            jt 13   jf 14      # &lt;---- look for VLAN 32 as earlier
+(013) ret      #262144
+(014) ret      #0
+</code></pre>
+<p>As a conclusion:</p>
+<ul>
+<li>Data from a <code>.pcap</code> file is treated as if everything came directly from the wire, the offsets are the same as we'd see them on the physical layer</li>
+<li>When we capture data from an interface, libpcap will use kernel ancillary data but it will also add a fallback expression in newer versions</li>
+</ul>
+<h3 id="how-does-tcpdump-compile-user-provided-expressions-source-code-analysis">How does tcpdump compile user provided expressions - Source code analysis</h3>
+<p>Let's look at how tcpdump (by means of libpcap) compiles its expressions into the appropriate BPF bytecode.</p>
+<p>tcpdump will compile different types of BPF depending on if the optimization flag is set but also particularly depending on if we open a file for reading or if we run a live capture.</p>
+<p>The <code>-r</code> indicates to read from a file and the parameter is read here:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L1759">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L1759</a></li>
+</ul>
+<pre><code>        case 'r':
+            RFileName = optarg;
+            break;
+</code></pre>
+<p>Opening a file for reading:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2053">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2053</a></li>
+</ul>
+<p>This is done here:</p>
+<pre><code>#ifdef HAVE_PCAP_SET_TSTAMP_PRECISION
+        pd = pcap_open_offline_with_tstamp_precision(RFileName,
+            ndo-&gt;ndo_tstamp_precision, ebuf);
+#else
+        pd = pcap_open_offline(RFileName, ebuf);
+#endif
+</code></pre>
+<p>If <code>-r</code> is not specified, then libpcap will listen on the interface instead:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2135">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2135</a></li>
+</ul>
+<pre><code>        /*
+         * Try to open the interface with the specified name.
+         */
+        pd = open_interface(device, ndo, ebuf);
+</code></pre>
+<p>If a file was used as an input or an socket on a network interface determines how the BPF will be compiled. The the section above.</p>
+<p>The actual compilation of the user provided filter expression to BPF happens here:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2238">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2238</a></li>
+</ul>
+<pre><code>    if (pcap_compile(pd, &amp;fcode, cmdbuf, Oflag, netmask) &lt; 0)
+        error(&quot;%s&quot;, pcap_geterr(pd));
+</code></pre>
+<p>If the <code>-d</code> parameter (and thus the <code>dflag</code>) is set, tcpdump will call libpcap's <code>bpf_dump</code> function to print the expression in one of three formats:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L1600">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L1600</a></li>
+</ul>
+<pre><code>        case 'D':
+            Dflag++;
+            break;
+</code></pre>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2240">https://github.com/the-tcpdump-group/tcpdump/blob/8281c4ae6e7e01524d20dd69b2275d0ed7949216/tcpdump.c#L2240</a></li>
+</ul>
+<pre><code>    if (dflag) {
+        bpf_dump(&amp;fcode, dflag);
+        pcap_close(pd);
+        free(cmdbuf);
+        pcap_freecode(&amp;fcode);
+        exit_tcpdump(S_SUCCESS);
+    }
+</code></pre>
+<p>The different dump formats are explained in the man page:</p>
+<pre><code>man tcpdump
+(...)
+       -d     Dump the compiled packet-matching code in a human readable form to standard output and stop.
+
+              Please  mind  that  although code compilation is always DLT-specific, typically it is impossible (and
+              unnecessary) to specify which DLT to use for the dump because tcpdump uses either the DLT of the  in‐
+              put  pcap  file  specified with -r, or the default DLT of the network interface specified with -i, or
+              the particular DLT of the network interface specified with -y and -i respectively. In these cases the
+              dump shows the same exact code that would filter the input file or the network interface without -d.
+
+              However, when neither -r nor -i is specified, specifying -d prevents tcpdump from guessing a suitable
+              network interface (see -i).  In this case the DLT defaults to EN10MB and can be set to another  valid
+              value manually with -y.
+
+       -dd    Dump packet-matching code as a C program fragment.
+
+       -ddd   Dump packet-matching code as decimal numbers (preceded with a count).
+(...)
+</code></pre>
+<h3 id="building-a-filter-expression-compiler">Building a filter expression compiler</h3>
+<h4 id="documentation">Documentation</h4>
+<p>In order to build a filter expression compiler, we look at the source code:</p>
+<ul>
+<li><a href="https://github.com/the-tcpdump-group/tcpdump/blob/master/tcpdump.c#L2238">https://github.com/the-tcpdump-group/tcpdump/blob/master/tcpdump.c#L2238</a></li>
+</ul>
+<p>And at this documentation here:</p>
+<ul>
+<li><a href="https://www.tcpdump.org/pcap.html">https://www.tcpdump.org/pcap.html</a></li>
+</ul>
+<h4 id="installing-dependencies">Installing dependencies</h4>
+<p>Install build dependencies:</p>
+<pre><code>subscription-manager repos --enable=codeready-builder-for-rhel-8-x86_64-rpms 
+yum install libpcap-devel -y
+</code></pre>
+<h4 id="creating-the-code">Creating the code</h4>
+<p>Now, create the following code:</p>
+<pre><code>cat &lt;&lt;'EOF' &gt; libpcap_expression_compiler.c
+// From:
+// https://github.com/the-tcpdump-group/tcpdump/blob/master/tcpdump.c#L2238
+// https://www.tcpdump.org/pcap.html
+// https://git.netfilter.org/iptables/tree/utils/nfbpf_compile.c
+
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pcap.h&gt;
+
+/*
+ * Concatenate all input arguments into a long string
+ */
+char * concat_args(int argc, char **argv) {
+    char * arg_string;
+    int len;
+
+        for(int i=1; i&lt;argc; i++) {
+            len += strlen(argv[i]);
+        }
+        arg_string = (char *)malloc(len+argc-1);
+
+    for (int i=1; i &lt; argc; i++) {
+        if(i != 1) {
+            arg_string = strcat(arg_string, &quot; &quot;);
+        }
+        arg_string = strcat(arg_string, argv[i]);
+    }
+
+    return arg_string;
+}
+
+int main(int argc, char **argv) {
+    pcap_t *handle;
+    char dev[] = &quot;lo&quot;;
+    char errbuf[PCAP_ERRBUF_SIZE];
+    struct bpf_program fcode;
+    bpf_u_int32 localnet = 0, netmask = 0;
+    int Oflag = 1;
+
+    char * filter_exp = concat_args(argc, argv);
+    if(argc &lt;= 1) {
+        fprintf(stderr, &quot;Empty filter expression\n&quot;);
+        exit(1);
+    }
+    printf(&quot;Compiling expression '%s'\n\n&quot;, filter_exp);
+
+    if (pcap_lookupnet(dev, &amp;localnet, &amp;netmask, errbuf) == -1) {
+        fprintf(stderr, &quot;Can't get netmask for device %s\n&quot;, dev);
+        localnet = 0;
+        netmask = 0;
+    }
+    handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
+    if (handle == NULL) {
+        fprintf(stderr, &quot;Couldn't open device %s: %s\n&quot;, dev, errbuf);
+        return(2);
+    }
+    if (pcap_compile(handle, &amp;fcode, filter_exp, Oflag, netmask) &lt; 0) {
+        fprintf(stderr, &quot;Couldn't parse filter %s: %s\n&quot;, filter_exp, pcap_geterr(handle));
+         return(2);
+    }
+
+    printf(&quot;*** Dump compiled packet-matching code (-d) ***\n\n&quot;);
+    bpf_dump(&amp;fcode, 1);
+    printf(&quot;\n*** Dump packet-matching code as a C program fragment (-dd) ***\n\n&quot;);
+    bpf_dump(&amp;fcode, 2);
+    printf(&quot;\n*** Dump packet-matching code as bytecode (-ddd) ***\n\n&quot;);
+    bpf_dump(&amp;fcode, 3);
+
+    // https://git.netfilter.org/iptables/tree/utils/nfbpf_compile.c
+    printf(&quot;\n*** Dump packet-matching code as bytecode (on one line) ***\n\n&quot;);
+    struct bpf_insn *ins;
+    ins = fcode.bf_insns;
+
+    printf(&quot;%d,&quot;, fcode.bf_len);
+    for (int i = 0; i &lt; fcode.bf_len-1; ++ins, ++i) {
+    printf(&quot;%u %u %u %u,&quot;, ins-&gt;code, ins-&gt;jt, ins-&gt;jf, ins-&gt;k);
+    }
+    printf(&quot;%u %u %u %u\n&quot;, ins-&gt;code, ins-&gt;jt, ins-&gt;jf, ins-&gt;k);
+
+    pcap_close(handle);
+    free(filter_exp);
+    pcap_freecode(&amp;fcode);
+
+    exit(0);
+}
+EOF
+</code></pre>
+<h4 id="compiling-the-code">Compiling the code</h4>
+<p>And compile it:</p>
+<pre><code>gcc libpcap_expression_compiler.c -o libpcap_expression_compiler -lpcap
+</code></pre>
+<h4 id="using-the-tool">Using the tool</h4>
+<p>The tool will now produce the same output as tcpdump with the <code>-d</code>, <code>-dd</code> or <code>-ddd</code> flag set:</p>
+<pre><code># ./libpcap_expression_compiler vlan 32
+Compiling expression 'vlan 32'
+
+*** Dump compiled packet-matching code (-d) ***
+
+(000) ldb      [-4048]
+(001) jeq      #0x1             jt 6    jf 2
+(002) ldh      [12]
+(003) jeq      #0x8100          jt 6    jf 4
+(004) jeq      #0x88a8          jt 6    jf 5
+(005) jeq      #0x9100          jt 6    jf 14
+(006) ldb      [-4048]
+(007) jeq      #0x1             jt 8    jf 10
+(008) ldb      [-4052]
+(009) ja       11
+(010) ldh      [14]
+(011) and      #0xfff
+(012) jeq      #0x20            jt 13   jf 14
+(013) ret      #8192
+(014) ret      #0
+
+*** Dump packet-matching code as a C program fragment (-dd) ***
+
+{ 0x30, 0, 0, 0xfffff030 },
+{ 0x15, 4, 0, 0x00000001 },
+{ 0x28, 0, 0, 0x0000000c },
+{ 0x15, 2, 0, 0x00008100 },
+{ 0x15, 1, 0, 0x000088a8 },
+{ 0x15, 0, 8, 0x00009100 },
+{ 0x30, 0, 0, 0xfffff030 },
+{ 0x15, 0, 2, 0x00000001 },
+{ 0x30, 0, 0, 0xfffff02c },
+{ 0x5, 0, 0, 0x00000001 },
+{ 0x28, 0, 0, 0x0000000e },
+{ 0x54, 0, 0, 0x00000fff },
+{ 0x15, 0, 1, 0x00000020 },
+{ 0x6, 0, 0, 0x00002000 },
+{ 0x6, 0, 0, 0x00000000 },
+
+*** Dump packet-matching code as bytecode (-ddd) ***
+
+15
+48 0 0 4294963248
+21 4 0 1
+40 0 0 12
+21 2 0 33024
+21 1 0 34984
+21 0 8 37120
+48 0 0 4294963248
+21 0 2 1
+48 0 0 4294963244
+5 0 0 1
+40 0 0 14
+84 0 0 4095
+21 0 1 32
+6 0 0 8192
+6 0 0 0
+
+*** Dump packet-matching code as bytecode (on one line) ***
+
+15,48 0 0 4294963248,21 4 0 1,40 0 0 12,21 2 0 33024,21 1 0 34984,21 0 8 37120,48 0 0 4294963248,21 0 2 1,48 0 0 4294963244,5 0 0 1,40 0 0 14,84 0 0 4095,21 0 1 32,6 0 0 8192,6 0 0 0
+</code></pre>
+<p>Or let's create another filter expression, just as another example:</p>
+<pre><code># ./libpcap_expression_compiler host 127.0.0.254 and tcp and port 5353
+Compiling expression 'host 127.0.0.254 and tcp and port 5353'
+
+*** Dump compiled packet-matching code (-d) ***
+
+(000) ldh      [12]
+(001) jeq      #0x800           jt 2    jf 16
+(002) ld       [26]
+(003) jeq      #0x7f0000fe      jt 6    jf 4
+(004) ld       [30]
+(005) jeq      #0x7f0000fe      jt 6    jf 16
+(006) ldb      [23]
+(007) jeq      #0x6             jt 8    jf 16
+(008) ldh      [20]
+(009) jset     #0x1fff          jt 16   jf 10
+(010) ldxb     4*([14]&amp;0xf)
+(011) ldh      [x + 14]
+(012) jeq      #0x14e9          jt 15   jf 13
+(013) ldh      [x + 16]
+(014) jeq      #0x14e9          jt 15   jf 16
+(015) ret      #8192
+(016) ret      #0
+
+*** Dump packet-matching code as a C program fragment (-dd) ***
+
+{ 0x28, 0, 0, 0x0000000c },
+{ 0x15, 0, 14, 0x00000800 },
+{ 0x20, 0, 0, 0x0000001a },
+{ 0x15, 2, 0, 0x7f0000fe },
+{ 0x20, 0, 0, 0x0000001e },
+{ 0x15, 0, 10, 0x7f0000fe },
+{ 0x30, 0, 0, 0x00000017 },
+{ 0x15, 0, 8, 0x00000006 },
+{ 0x28, 0, 0, 0x00000014 },
+{ 0x45, 6, 0, 0x00001fff },
+{ 0xb1, 0, 0, 0x0000000e },
+{ 0x48, 0, 0, 0x0000000e },
+{ 0x15, 2, 0, 0x000014e9 },
+{ 0x48, 0, 0, 0x00000010 },
+{ 0x15, 0, 1, 0x000014e9 },
+{ 0x6, 0, 0, 0x00002000 },
+{ 0x6, 0, 0, 0x00000000 },
+
+*** Dump packet-matching code as bytecode (-ddd) ***
+
+17
+40 0 0 12
+21 0 14 2048
+32 0 0 26
+21 2 0 2130706686
+32 0 0 30
+21 0 10 2130706686
+48 0 0 23
+21 0 8 6
+40 0 0 20
+69 6 0 8191
+177 0 0 14
+72 0 0 14
+21 2 0 5353
+72 0 0 16
+21 0 1 5353
+6 0 0 8192
+6 0 0 0
+
+*** Dump packet-matching code as bytecode (on one line) ***
+
+17,40 0 0 12,21 0 14 2048,32 0 0 26,21 2 0 2130706686,32 0 0 30,21 0 10 2130706686,48 0 0 23,21 0 8 6,40 0 0 20,69 6 0 8191,177 0 0 14,72 0 0 14,21 2 0 5353,72 0 0 16,21 0 1 5353,6 0 0 8192,6 0 0 0
+</code></pre>
+<h2 id="bpf-bytecode">BPF Bytecode</h2>
+<ul>
+<li><a href="https://www.kernel.org/doc/Documentation/networking/filter.txt">https://www.kernel.org/doc/Documentation/networking/filter.txt</a></li>
+<li><a href="https://github.com/torvalds/linux/tree/master/tools/bpf">https://github.com/torvalds/linux/tree/master/tools/bpf</a></li>
+</ul>
+<h3 id="compiling-bpf-bytecode">Compiling BPF Bytecode</h3>
+<p>In order to get to BPF Bytecode, there is an easy, an intermediate and a more complex way.</p>
+<h4 id="tcpdump-with-filter-expression">tcpdump with filter expression</h4>
+<p>This is the easiest way:</p>
+<pre><code># tcpdump -i lo -e -nn  &quot;tcp dst port 8080&quot; -d 
+(000) ldh      [12]
+(001) jeq      #0x86dd          jt 2    jf 6
+(002) ldb      [20]
+(003) jeq      #0x6             jt 4    jf 15
+(004) ldh      [56]
+(005) jeq      #0x1f90          jt 14   jf 15
+(006) jeq      #0x800           jt 7    jf 15
+(007) ldb      [23]
+(008) jeq      #0x6             jt 9    jf 15
+(009) ldh      [20]
+(010) jset     #0x1fff          jt 15   jf 11
+(011) ldxb     4*([14]&amp;0xf)
+(012) ldh      [x + 16]
+(013) jeq      #0x1f90          jt 14   jf 15
+(014) ret      #262144
+(015) ret      #0
+</code></pre>
+<p>You get the Bytecode with:</p>
+<pre><code># tcpdump -i lo -e -nn  &quot;tcp dst port 8080&quot; -ddd | tr '\n' ','
+16,40 0 0 12,21 0 4 34525,48 0 0 20,21 0 11 6,40 0 0 56,21 8 9 8080,21 0 8 2048,48 0 0 23,21 0 6 6,40 0 0 20,69 4 0 8191,177 0 0 14,72 0 0 16,21 0 1 8080,6 0 0 262144,6 0 0 0,
+</code></pre>
+<h4 id="tcpdump-with-explicit-offset-expression">tcpdump with explicit offset expression</h4>
+<p>Let's get a bit more fancy. In <code>test.pcap</code>, I captured a TCP request to port 8080. The hexdump looks as follows:</p>
+<pre><code># tcpdump -e -nn -r test.pcap -XX | tail -n 12
+reading from file test.pcap, link-type EN10MB (Ethernet)
+dropped privs to tcpdump
+07:03:36.901256 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [F.], seq 84, ack 1993, win 1373, options [nop,nop,TS val 3322938017 ecr 3322938017], length 0
+    0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+    0x0010:  0034 7023 4000 4006 5497 c0a8 7a5c c0a8  .4p#@.@.T...z\..
+    0x0020:  7a5c 8d46 1f90 86e0 b75e 7a9a 5a92 8011  z\.F.....^z.Z...
+    0x0030:  055d 7630 0000 0101 080a c610 02a1 c610  .]v0............
+    0x0040:  02a1                                     ..
+07:03:36.901275 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.8080 &gt; 192.168.122.92.36166: Flags [.], ack 85, win 342, options [nop,nop,TS val 3322938017 ecr 3322938017], length 0
+    0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+    0x0010:  0034 f1fa 4000 4006 d2bf c0a8 7a5c c0a8  .4..@.@.....z\..
+    0x0020:  7a5c 1f90 8d46 7a9a 5a92 86e0 b75f 8010  z\...Fz.Z...._..
+    0x0030:  0156 7630 0000 0101 080a c610 02a1 c610  .Vv0............
+    0x0040:  02a1    
+</code></pre>
+<p>We want to identify all packets with a dst port of <code>8080</code> (or <code>0x1f90</code> in hex notation). Each visual block in the hexdump is a half word, or 16 bits. Offsets in tcpdump are specified in Bytes, and the dst port field is 2 Bytes in lenght. We are looking for the 18th half word, or Bytes 36 and 37. The tcpdump expression would hence be:</p>
+<pre><code>ether[36:2] == 0x1f90
+</code></pre>
+<p>Here's the result of the filter:</p>
+<pre><code># tcpdump -e -nn -r test.pcap ether[36:2] == 0x1f90
+reading from file test.pcap, link-type EN10MB (Ethernet)
+dropped privs to tcpdump
+07:03:36.900276 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 74: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [S], seq 2262873866, win 43690, options [mss 65495,sackOK,TS val 3322938016 ecr 0,nop,wscale 7], length 0
+07:03:36.900297 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [.], ack 2056934090, win 342, options [nop,nop,TS val 3322938016 ecr 3322938016], length 0
+07:03:36.900328 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 149: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [P.], seq 0:83, ack 1, win 342, options [nop,nop,TS val 3322938016 ecr 3322938016], length 83: HTTP: GET / HTTP/1.1
+07:03:36.901097 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [.], ack 156, win 350, options [nop,nop,TS val 3322938016 ecr 3322938016], length 0
+07:03:36.901122 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [.], ack 1992, win 1373, options [nop,nop,TS val 3322938017 ecr 3322938016], length 0
+07:03:36.901256 00:00:00:00:00:00 &gt; 00:00:00:00:00:00, ethertype IPv4 (0x0800), length 66: 192.168.122.92.36166 &gt; 192.168.122.92.8080: Flags [F.], seq 83, ack 1993, win 1373, options [nop,nop,TS val 3322938017 ecr 3322938017], length 0
+</code></pre>
+<p>And the compiled expression:</p>
+<pre><code># tcpdump -e -nn -i lo ether[36:2] == 0x1f90 -d
+(000) ldh      [36]
+(001) jeq      #0x1f90          jt 2    jf 3
+(002) ret      #262144
+(003) ret      #0
+# tcpdump -e -nn -i lo ether[36:2] == 0x1f90 -ddd | tr '\n' ','
+4,40 0 0 36,21 0 1 8080,6 0 0 262144,6 0 0 0,
+</code></pre>
+<h4 id="using-bpf-asm-like-code">Using BPF asm-like code</h4>
+<h5 id="compiling-helper-binaries">Compiling helper binaries</h5>
+<p>First, you will need the bpf_asm binary from the kernel source code. </p>
+<p>For RHEL/CentOS 8, install build dependencies:</p>
+<pre><code>yum install '@Development Tools' -y
+yum install gcc-toolset -y
+yum install binutils-devel -y
+yum install readline-devel -y
+yum install elfutils-libelf-devel -y
+yum install clang -y
+yum install llvm -y
+</code></pre>
+<p>Get the kernel source code on RHEL / CentOS:</p>
+<pre><code>mkdir -p kernel/src
+cd kernel/
+yumdownloader --source kernel
+cp kernel-*.src.rpm src/ ; cd src ; rpm2cpio kernel-*.src.rpm | cpio -idmv
+tar -xf linux-*.tar.xz
+</code></pre>
+<p>Compile the BPF toolset:</p>
+<pre><code>cd $(find . -path '*tools/bpf')
+make all
+cp bpf_asm /usr/local/bin/.
+cp bpf_dbg /usr/local/bin/.
+cp bpf_jit_disasm /usr/local/bin/.
+cp bpftool/bpftool /usr/local/bin/.
+</code></pre>
+<h5 id="building-byte-code">Building Byte code</h5>
+<p>Now, create the following ASM like code:</p>
+<pre><code># cat test.bpf 
+     ldh [36]
+     jneq #0x1f90, lb_1
+     ret #1
+
+lb_1:
+     ret #0
+</code></pre>
+<p>And compile it with:</p>
+<pre><code># bpf_asm test.bpf 
+4,40 0 0 36,21 0 1 8080,6 0 0 1,6 0 0 0,
+</code></pre>
+<p>Compare this to the earlier output of <code>tcpdump -ddd</code>:</p>
+<pre><code># tcpdump -e -nn -i lo ether[36:2] == 0x1f90 -ddd | tr '\n' ','
+4,40 0 0 36,21 0 1 8080,6 0 0 262144,6 0 0 0,
+</code></pre>
+<p>The only thing that's different here is the return code.</p>
+<p>For further details, see:</p>
+<ul>
+<li><a href="https://www.kernel.org/doc/Documentation/networking/filter.txt">https://www.kernel.org/doc/Documentation/networking/filter.txt</a></li>
+</ul>
+<h2 id="using-bpf-in-iptables-expressions">Using BPF in iptables expressions</h2>
+<p>BPF allows us to write complex iptables rules. However, if you simply try using the rules that  we had compiled above, you will soon find out that this does not work. </p>
+<p>Instead, look at the following resources:</p>
+<ul>
+<li><a href="https://www.lowendtalk.com/discussion/47469/bpf-a-bytecode-for-filtering">https://www.lowendtalk.com/discussion/47469/bpf-a-bytecode-for-filtering</a></li>
+<li><a href="https://git.netfilter.org/iptables/tree/utils/nfbpf_compile.c">https://git.netfilter.org/iptables/tree/utils/nfbpf_compile.c</a></li>
+</ul>
+<p><code>nfbpf_compile</code> will create slightly different Bytecode, suited for iptables. Here's the full script from the above link (just in case the original resource changes):</p>
+<pre><code>cat &lt;&lt;'EOF' &gt; nbpf_compile.c
+/*
+ * BPF program compilation tool
+ *
+ * Generates decimal output, similar to `tcpdump -ddd ...`.
+ * Unlike tcpdump, will generate for any given link layer type.
+ *
+ * Written by Willem de Bruijn (willemb@google.com)
+ * Copyright Google, Inc. 2013
+ * Licensed under the GNU General Public License version 2 (GPLv2)
+*/
+
+#include &lt;pcap.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char **argv)
+{
+    struct bpf_program program;
+    struct bpf_insn *ins;
+    int i, dlt = DLT_RAW;
+
+    if (argc &lt; 2 || argc &gt; 3) {
+        fprintf(stderr, &quot;Usage:    %s [link] '&lt;program&gt;'\n\n&quot;
+                &quot;          link is a pcap linklayer type:\n&quot;
+                &quot;          one of EN10MB, RAW, SLIP, ...\n\n&quot;
+                &quot;Examples: %s RAW 'tcp and greater 100'\n&quot;
+                &quot;          %s EN10MB 'ip proto 47'\n'&quot;,
+                argv[0], argv[0], argv[0]);
+        return 1;
+    }
+
+    if (argc == 3) {
+        dlt = pcap_datalink_name_to_val(argv[1]);
+        if (dlt == -1) {
+            fprintf(stderr, &quot;Unknown datalinktype: %s\n&quot;, argv[1]);
+            return 1;
+        }
+    }
+
+    if (pcap_compile_nopcap(65535, dlt, &amp;program, argv[argc - 1], 1,
+                PCAP_NETMASK_UNKNOWN)) {
+        fprintf(stderr, &quot;Compilation error\n&quot;);
+        return 1;
+    }
+
+    printf(&quot;%d,&quot;, program.bf_len);
+    ins = program.bf_insns;
+    for (i = 0; i &lt; program.bf_len-1; ++ins, ++i)
+        printf(&quot;%u %u %u %u,&quot;, ins-&gt;code, ins-&gt;jt, ins-&gt;jf, ins-&gt;k);
+
+    printf(&quot;%u %u %u %u\n&quot;, ins-&gt;code, ins-&gt;jt, ins-&gt;jf, ins-&gt;k);
+
+    pcap_freecode(&amp;program);
+    return 0;
+}
+EOF
+</code></pre>
+<p>Compile this with:</p>
+<pre><code>gcc nbpf_compile.c -o nbpf_compile -lpcap
+</code></pre>
+<p>Now, run this:</p>
+<pre><code># ./nbpf_compile RAW 'tcp port 8080'
+23,48 0 0 0,84 0 0 240,21 0 6 96,48 0 0 6,21 0 17 6,40 0 0 40,21 14 0 8080,40 0 0 42,21 12 13 8080,48 0 0 0,84 0 0 240,21 0 10 64,48 0 0 9,21 0 8 6,40 0 0 6,69 6 0 8191,177 0 0 0,72 0 0 0,21 2 0 8080,72 0 0 2,21 0 1 8080,6 0 0 65535,6 0 0 0
+</code></pre>
+<p>Compare this to the tcpdump output which will not work:</p>
+<pre><code># tcpdump -r  test.pcap -d tcp port 8080 -ddd | tr '\n' ' '
+reading from file test.pcap, link-type EN10MB (Ethernet)
+20 40 0 0 12 21 0 6 34525 48 0 0 20 21 0 15 6 40 0 0 54 21 12 0 8080 40 0 0 56 21 10 11 8080 21 0 10 2048 48 0 0 23 21 0 8 6 40 0 0 20 69 6 0 8191 177 0 0 14 72 0 0 14 21 2 0 8080 72 0 0 16 21 0 1 8080 6 0 0 262144 6 0 0 0 
+# tcpdump -i lo  -d tcp port 8080 -ddd | tr '\n' ' '
+20 40 0 0 12 21 0 6 34525 48 0 0 20 21 0 15 6 40 0 0 54 21 12 0 8080 40 0 0 56 21 10 11 8080 21 0 10 2048 48 0 0 23 21 0 8 6 40 0 0 20 69 6 0 8191 177 0 0 14 72 0 0 14 21 2 0 8080 72 0 0 16 21 0 1 8080 6 0 0 262144 6 0 0 0
+</code></pre>
+<p>And also run a little web server for the sake of this test:</p>
+<pre><code>#  python3 -m http.server 8080 &amp;
+</code></pre>
+<p>Run curl against the web server just to check that it's serving documents and can be reached:</p>
+<pre><code># curl 192.168.122.92:8080 -I
+HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/3.6.8
+Date: Fri, 26 Mar 2021 15:46:30 GMT
+Content-type: text/html; charset=utf-8
+Content-Length: 2272
+</code></pre>
+<p>Now, let's create an iptables rule that will match on the Byte code and apply it:</p>
+<pre><code># iptables -I INPUT -m bpf --bytecode &quot;23,48 0 0 0,84 0 0 240,21 0 6 96,48 0 0 6,21 0 17 6,40 0 0 40,21 14 0 8080,40 0 0 42,21 12 13 8080,48 0 0 0,84 0 0 240,21 0 10 64,48 0 0 9,21 0 8 6,40 0 0 6,69 6 0 8191,177 0 0 0,72 0 0 0,21 2 0 8080,72 0 0 2,21 0 1 8080,6 0 0 65535,6 0 0 0&quot; --j REJECT
+</code></pre>
+<blockquote>
+<p>This <em>must</em> be from <code>nbpf_compile</code>!</p>
+</blockquote>
+<p>After applying the rule, we can no longer contact the web server:</p>
+<pre><code># curl 192.168.122.92:8080 -I
+curl: (7) Failed connect to 192.168.122.92:8080; Connection refused
+</code></pre>
+<p>And we can see that this rule here was matched:</p>
+<pre><code># iptables -L INPUT -nv
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    5   300 REJECT     all  --  *      *       0.0.0.0/0            0.0.0.0/0           match bpf 48 0 0 0,84 0 0 240,21 0 6 96,48 0 0 6,21 0 17 6,40 0 0 40,21 14 0 8080,40 0 0 42,21 12 13 8080,48 0 0 0,84 0 0 240,21 0 10 64,48 0 0 9,21 0 8 6,40 0 0 6,69 6 0 8191,177 0 0 0,72 0 0 0,21 2 0 8080,72 0 0 2,21 0 1 8080,6 0 0 65535,6 0 0 0 reject-with icmp-port-unreachable
+</code></pre>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 26, 2021</span>
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../arp_and_the_neighbor_table/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              ARP and the Neighbor table
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../bonding_in_linux/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Bonding in Linux
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>
